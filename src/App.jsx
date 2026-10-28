@@ -76,18 +76,68 @@ function Reveal({ children, className = "", delay = 0 }) {
   );
 }
 
-function KartuKeahlianMelingkar({ daftar }) {
-  const [aktif, setAktif] = useState(null);
-  const aktifRef = useRef(null);
-  const areaHoverRef = useRef(false);
+function KartuKeahlian3D({ daftar }) {
+  const panggungRef = useRef(null);
   const kartuRefs = useRef([]);
-  const sudutRef = useRef(0);
-  const kecepatanRef = useRef(0.38);
-  const hoverBobotRef = useRef(daftar.map(() => 0));
+  const pilRefs = useRef([]);
+  const infoNamaRef = useRef(null);
+  const infoKategoriRef = useRef(null);
+  const infoLogoRef = useRef(null);
+  const infoTitikRef = useRef(null);
 
-  useEffect(() => {
-    aktifRef.current = aktif;
-  }, [aktif]);
+  // Seluruh state animasi disimpan di ref agar 100% bebas re-render React (mulus 60/120fps)
+  const hoverIndeksRef = useRef(-1);
+  const diDalamAreaRef = useRef(false);
+  const sudutRef = useRef(0);
+  const kecepatanRef = useRef(0.42);
+  const bobotKartuRef = useRef(daftar.map(() => 0));
+  const targetTiltRef = useRef({ x: 0, y: 0 });
+  const currentTiltRef = useRef({ x: 0, y: 0 });
+  const dragRef = useRef({ aktif: false, xAwal: 0, kecepatanTambahan: 0 });
+
+  const perbaruiTampilanPusat = (indeks) => {
+    const item = indeks >= 0 ? daftar[indeks] : null;
+    if (infoNamaRef.current) {
+      infoNamaRef.current.textContent = item ? item.nama : "8 Bahasa & Framework";
+    }
+    if (infoKategoriRef.current) {
+      infoKategoriRef.current.textContent = item
+        ? item.kategori
+        : "Orbit 3D Interaktif · Geser atau Sentuh";
+    }
+    if (infoLogoRef.current) {
+      if (item) {
+        infoLogoRef.current.src = item.logo;
+        infoLogoRef.current.style.opacity = "1";
+        infoLogoRef.current.style.transform = "scale(1)";
+      } else {
+        infoLogoRef.current.style.opacity = "0.85";
+        infoLogoRef.current.style.transform = "scale(0.92)";
+      }
+    }
+    if (infoTitikRef.current) {
+      infoTitikRef.current.style.backgroundColor = item ? item.warna : "#0071e3";
+      infoTitikRef.current.style.boxShadow = item
+        ? `0 0 12px ${item.warna}`
+        : "0 0 10px #0071e3";
+    }
+    pilRefs.current.forEach((pil, idx) => {
+      if (!pil) return;
+      const terpilih = idx === indeks;
+      pil.style.borderColor = terpilih
+        ? daftar[idx].warna
+        : "rgba(255,255,255,0.85)";
+      pil.style.transform = terpilih ? "translateY(-2px) scale(1.04)" : "none";
+      pil.style.boxShadow = terpilih
+        ? `0 10px 24px -6px ${daftar[idx].warna}55`
+        : "";
+    });
+  };
+
+  const pilihKartu = (indeks) => {
+    hoverIndeksRef.current = indeks;
+    perbaruiTampilanPusat(indeks);
+  };
 
   useEffect(() => {
     let frameId;
@@ -97,54 +147,80 @@ function KartuKeahlianMelingkar({ daftar }) {
       const dt = Math.min((waktuSekarang - waktuTerakhir) / 1000, 0.05);
       waktuTerakhir = waktuSekarang;
 
-      // Inersia halus (delay perlambatan) saat kursor masuk atau memilih kartu
-      const sedangDihentikan =
-         areaHoverRef.current || aktifRef.current !== null;
-      const targetKecepatan = sedangDihentikan ? 0 : 0.38;
+      // Jangan pernah langsung berhenti mendadak: tetap berputar pelan (slow-motion) dengan inersia halus
+      const targetKecepatan =
+        hoverIndeksRef.current >= 0
+          ? 0.11
+          : diDalamAreaRef.current
+            ? 0.22
+            : 0.42;
+
       kecepatanRef.current +=
-        (targetKecepatan - kecepatanRef.current) * Math.min(1, dt * 3.2);
+        (targetKecepatan - kecepatanRef.current) * Math.min(1, dt * 1.6);
+
+      // Redam dorongan geser manual secara bertahap
+      dragRef.current.kecepatanTambahan *= Math.pow(0.92, dt * 60);
 
       sudutRef.current =
-        (sudutRef.current + kecepatanRef.current * dt) % (Math.PI * 2);
+        (sudutRef.current +
+          (kecepatanRef.current + dragRef.current.kecepatanTambahan) * dt) %
+        (Math.PI * 2);
+
+      // Haluskan kemiringan panggung 3D mengikuti posisi kursor
+      currentTiltRef.current.x +=
+        (targetTiltRef.current.x - currentTiltRef.current.x) *
+        Math.min(1, dt * 4.5);
+      currentTiltRef.current.y +=
+        (targetTiltRef.current.y - currentTiltRef.current.y) *
+        Math.min(1, dt * 4.5);
 
       const mobile = window.innerWidth < 640;
-      const radiusX = mobile ? 118 : 210;
-      const radiusY = mobile ? 78 : 96;
+      // Radius dibuat lebar agar pada titik pergantian kedalaman (atas & bawah) kartu tidak pernah bersentuhan/patah
+      const radiusX = mobile ? 142 : 258;
+      const radiusY = mobile ? 66 : 86;
+      const radiusZ = mobile ? 95 : 165;
       const total = daftar.length;
 
       for (let i = 0; i < total; i++) {
         const el = kartuRefs.current[i];
         if (!el) continue;
 
-        const targetBobot = aktifRef.current === i ? 1 : 0;
-        hoverBobotRef.current[i] +=
-          (targetBobot - hoverBobotRef.current[i]) * Math.min(1, dt * 6.5);
-        const bobot = hoverBobotRef.current[i];
+        const targetBobot = hoverIndeksRef.current === i ? 1 : 0;
+        bobotKartuRef.current[i] +=
+          (targetBobot - bobotKartuRef.current[i]) * Math.min(1, dt * 5.2);
+        const bobot = bobotKartuRef.current[i];
 
         const sudut = sudutRef.current + (i * Math.PI * 2) / total;
-        const x = Math.cos(sudut) * radiusX;
-        const y = Math.sin(sudut) * radiusY - bobot * 12;
+        const cosS = Math.cos(sudut);
+        const sinS = Math.sin(sudut);
 
-        // Kedalaman 0 (paling belakang) hingga 1 (paling depan)
-        const kedalaman = (Math.sin(sudut) + 1) / 2;
-        const kedalamanHalus = Math.pow(kedalaman, 1.35);
+        // Kedalaman: 0 (paling belakang) hingga 1 (paling depan)
+        const kedalaman = (sinS + 1) / 2;
+        const kedalamanHalus =
+          kedalaman * kedalaman * (3 - 2 * kedalaman); // smoothstep
 
-        // Skala dan kemiringan diinterpolasi dengan mulus tanpa patahan
-        const skalaDasar = 0.76 + kedalamanHalus * 0.28;
-        const skala = skalaDasar + bobot * (1.12 - skalaDasar);
-        const kemiringan = Math.cos(sudut) * 8 * (1 - bobot);
+        // Posisi 3D murni dengan ayunan mengambang lembut
+        const x = cosS * radiusX + currentTiltRef.current.x * 14 * (kedalaman - 0.5);
+        const y =
+          sinS * radiusY +
+          Math.sin(sudut * 2 + waktuSekarang * 0.0015) * 4 -
+          bobot * 14 +
+          currentTiltRef.current.y * 10;
+        const z = sinS * radiusZ + bobot * 48;
 
-        // Efek fade (transparansi) dan blur lembut untuk kartu di sisi belakang
-        const opasitasDasar = 0.26 + kedalamanHalus * 0.74;
-        const opasitas = opasitasDasar + bobot * (1 - opasitasDasar);
-        const blurPx = (1 - kedalaman) * 1.6 * (1 - bobot);
+        // Rotasi perspektif 3D mengikuti lengkungan cincin silinder
+        const rotY = -cosS * 32 * (1 - bobot * 0.75) + currentTiltRef.current.x * 8;
+        const rotX = -sinS * 8 * (1 - bobot * 0.8) - currentTiltRef.current.y * 8;
+        const rotZ = cosS * 4 * (1 - bobot);
 
-        const zIndex =
-          bobot > 0.45 ? 150 : Math.round(kedalaman * 80) + 10;
+        const skala = 0.78 + kedalamanHalus * 0.24 + bobot * 0.12;
+        const opasitas = 0.34 + kedalamanHalus * 0.66 + bobot * (1 - (0.34 + kedalamanHalus * 0.66));
 
-        el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${skala.toFixed(3)}) rotate(${kemiringan.toFixed(2)}deg)`;
-        el.style.opacity = opasitas.toFixed(3);
-        el.style.filter = blurPx > 0.15 ? `blur(${blurPx.toFixed(2)}px)` : "none";
+        // Karena pada titik sinS = ±1 jarak antar kartu > lebar kartu, zIndex tidak akan pernah bertabrakan
+        const zIndex = Math.round(kedalaman * 100) + (bobot > 0.6 ? 120 : 10);
+
+        el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${skala.toFixed(3)})`;
+        el.style.opacity = Math.min(1, opasitas).toFixed(3);
         el.style.zIndex = String(zIndex);
       }
 
@@ -155,113 +231,171 @@ function KartuKeahlianMelingkar({ daftar }) {
     return () => cancelAnimationFrame(frameId);
   }, [daftar]);
 
+  const saatGerakPanggung = (e) => {
+    const el = panggungRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    targetTiltRef.current = { x: nx, y: ny };
+
+    if (dragRef.current.aktif) {
+      const dx = e.clientX - dragRef.current.xAwal;
+      dragRef.current.xAwal = e.clientX;
+      dragRef.current.kecepatanTambahan = dx * 0.045;
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
       <div
-        className="relative flex h-[340px] w-full max-w-[640px] items-center justify-center sm:h-[390px]"
+        ref={panggungRef}
         onMouseEnter={() => {
-          areaHoverRef.current = true;
+          diDalamAreaRef.current = true;
         }}
+        onMouseMove={saatGerakPanggung}
         onMouseLeave={() => {
-          areaHoverRef.current = false;
-          setAktif(null);
+          diDalamAreaRef.current = false;
+          dragRef.current.aktif = false;
+          targetTiltRef.current = { x: 0, y: 0 };
+          pilihKartu(-1);
         }}
+        onPointerDown={(e) => {
+          dragRef.current.aktif = true;
+          dragRef.current.xAwal = e.clientX;
+        }}
+        onPointerUp={() => {
+          dragRef.current.aktif = false;
+        }}
+        className="stage-3d relative flex h-[360px] w-full max-w-[720px] cursor-grab select-none items-center justify-center active:cursor-grabbing sm:h-[420px]"
       >
-        {/* Jalur orbit tipis */}
-        <div className="pointer-events-none absolute h-[170px] w-[260px] rounded-full border border-white/60 shadow-[inset_0_0_30px_rgba(255,255,255,0.5)] sm:h-[210px] sm:w-[440px]" />
-        <div className="pointer-events-none absolute h-36 w-56 rounded-full bg-gradient-to-tr from-sky-300/30 via-fuchsia-200/25 to-amber-200/30 blur-3xl sm:h-48 sm:w-80" />
+        {/* Cincin orbit 3D berlapis di latar panggung */}
+        <div
+          style={{ transform: "rotateX(68deg)" }}
+          className="pointer-events-none absolute h-[260px] w-[280px] rounded-full border border-white/80 shadow-[0_0_50px_rgba(59,130,246,0.18),inset_0_0_40px_rgba(255,255,255,0.6)] sm:h-[340px] sm:w-[520px]"
+        />
+        <div
+          style={{ transform: "rotateX(68deg)" }}
+          className="pointer-events-none absolute h-[190px] w-[200px] rounded-full border border-dashed border-sky-400/35 sm:h-[250px] sm:w-[390px]"
+        />
 
-        {daftar.map((item, i) => {
-          const sedangAktif = aktif === i;
-          return (
-            <button
-              key={item.nama}
-              ref={(el) => {
-                kartuRefs.current[i] = el;
-              }}
-              type="button"
-              onMouseEnter={() => setAktif(i)}
-              onClick={() => setAktif(sedangAktif ? null : i)}
+        {/* Inti Hologram 3D di Tengah Cincin */}
+        <div className="liquid-glass pointer-events-none relative z-30 flex flex-col items-center justify-center rounded-3xl px-5 py-3.5 text-center shadow-lg">
+          <div className="mb-1.5 flex items-center gap-2">
+            <span
+              ref={infoTitikRef}
+              className="h-2 w-2 rounded-full bg-[#0071e3] shadow-[0_0_10px_#0071e3] transition-colors duration-300"
+            />
+            <img
+              ref={infoLogoRef}
+              src={daftar[3].logo}
+              alt=""
+              className="h-5 w-5 object-contain transition-all duration-300"
+            />
+          </div>
+          <p
+            ref={infoNamaRef}
+            className="text-xs font-extrabold tracking-tight text-[#141417] sm:text-sm"
+          >
+            8 Bahasa & Framework
+          </p>
+          <p
+            ref={infoKategoriRef}
+            className="mt-0.5 text-[10px] font-medium text-[#515154]"
+          >
+            Orbit 3D Interaktif · Geser atau Sentuh
+          </p>
+        </div>
+
+        {/* Kartu-kartu Bahasa yang Mengorbit dalam Ruang 3D */}
+        {daftar.map((item, i) => (
+          <button
+            key={item.nama}
+            ref={(el) => {
+              kartuRefs.current[i] = el;
+            }}
+            type="button"
+            onMouseEnter={() => pilihKartu(i)}
+            onClick={() =>
+              pilihKartu(hoverIndeksRef.current === i ? -1 : i)
+            }
+            style={{
+              background: item.bgGradasi,
+              borderColor: `${item.warna}66`,
+              boxShadow: `0 18px 38px -10px ${item.warna}40, inset 0 1.5px 1px rgba(255,255,255,0.95), inset 0 -1px 2px ${item.warna}25`,
+            }}
+            className="orbit-3d-card group absolute flex h-34 w-26 cursor-pointer flex-col items-center justify-between rounded-[24px] border-2 p-3 text-center backdrop-blur-xl sm:h-40 sm:w-32 sm:p-3.5"
+          >
+            <div className="flex w-full items-center justify-between">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{
+                  backgroundColor: item.warna,
+                  boxShadow: `0 0 8px ${item.warna}`,
+                }}
+              />
+              <span
+                className="rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide sm:text-[10px]"
+                style={{
+                  backgroundColor: `${item.warna}20`,
+                  color: item.warna,
+                }}
+              >
+                0{i + 1}
+              </span>
+            </div>
+
+            <div
               style={{
-                background: item.bgGradasi,
-                borderColor: sedangAktif ? item.warna : "rgba(255,255,255,0.85)",
-                boxShadow: sedangAktif
-                  ? `0 24px 48px -10px ${item.warna}55, inset 0 1.5px 1px rgba(255,255,255,0.95)`
-                  : `0 14px 32px -10px ${item.warna}30, inset 0 1.5px 1px rgba(255,255,255,0.9)`,
-                willChange: "transform, opacity, filter",
+                boxShadow: `0 8px 20px -6px ${item.warna}45`,
               }}
-              className="group absolute flex h-38 w-30 cursor-pointer flex-col items-center justify-between rounded-[26px] border p-3.5 text-center backdrop-blur-2xl transition-shadow duration-500 sm:h-42 sm:w-34 sm:p-4"
+              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/90 p-2.5 ring-1 ring-white transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14"
             >
-              <div className="flex w-full items-center justify-between">
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{
-                    backgroundColor: item.warna,
-                    boxShadow: `0 0 8px ${item.warna}`,
-                  }}
-                />
-                <span
-                  className="rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wide"
-                  style={{
-                    backgroundColor: `${item.warna}22`,
-                    color: item.warna,
-                  }}
-                >
-                  0{i + 1}
-                </span>
-              </div>
+              <img
+                src={item.logo}
+                alt={`Logo ${item.nama}`}
+                className="h-full w-full object-contain"
+              />
+            </div>
 
-              <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-white/85 p-2.5 shadow-xs ring-1 ring-white transition-transform duration-500 group-hover:scale-110 sm:h-15 sm:w-15">
-                <img
-                  src={item.logo}
-                  alt={`Logo ${item.nama}`}
-                  className="h-full w-full object-contain"
-                />
-              </div>
-
-              <div>
-                <p className="text-xs font-bold tracking-tight text-[#141417] sm:text-sm">
-                  {item.nama}
-                </p>
-                <p className="mt-0.5 text-[10px] font-medium text-[#515154]">
-                  {item.kategori}
-                </p>
-              </div>
-            </button>
-          );
-        })}
+            <div>
+              <p className="text-xs font-extrabold tracking-tight text-[#141417] sm:text-[13px]">
+                {item.nama}
+              </p>
+              <p className="mt-0.5 line-clamp-1 text-[9px] font-semibold text-[#515154] sm:text-[10px]">
+                {item.kategori}
+              </p>
+            </div>
+          </button>
+        ))}
       </div>
 
-      {/* Tombol pill bahasa dengan efek Liquid Glass */}
-      <div className="mt-3 flex flex-wrap justify-center gap-2">
-        {daftar.map((item, i) => {
-          const terpilih = aktif === i;
-          return (
-            <button
-              key={item.nama}
-              type="button"
-              onMouseEnter={() => {
-                areaHoverRef.current = true;
-                setAktif(i);
-              }}
-              onMouseLeave={() => {
-                areaHoverRef.current = false;
-                setAktif(null);
-              }}
-              onClick={() => setAktif(terpilih ? null : i)}
-              style={{
-                borderColor: terpilih ? item.warna : "rgba(255,255,255,0.85)",
-                background: terpilih
-                  ? `linear-gradient(135deg, ${item.warna}28, rgba(255,255,255,0.85))`
-                  : undefined,
-              }}
-              className="liquid-glass-sub inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#141417] transition duration-300 hover:-translate-y-0.5"
-            >
-              <img src={item.logo} alt="" className="h-4 w-4 object-contain" />
-              <span>{item.nama}</span>
-            </button>
-          );
-        })}
+      {/* Baris pill cepat untuk memilih kartu 3D */}
+      <div className="mt-2 flex flex-wrap justify-center gap-2">
+        {daftar.map((item, i) => (
+          <button
+            key={item.nama}
+            ref={(el) => {
+              pilRefs.current[i] = el;
+            }}
+            type="button"
+            onMouseEnter={() => {
+              diDalamAreaRef.current = true;
+              pilihKartu(i);
+            }}
+            onMouseLeave={() => {
+              diDalamAreaRef.current = false;
+              pilihKartu(-1);
+            }}
+            onClick={() =>
+              pilihKartu(hoverIndeksRef.current === i ? -1 : i)
+            }
+            className="liquid-glass-sub inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#141417] transition duration-300"
+          >
+            <img src={item.logo} alt="" className="h-4 w-4 object-contain" />
+            <span>{item.nama}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -343,7 +477,7 @@ export default function App() {
       <main className="mx-auto max-w-6xl space-y-16 px-4 pt-28 pb-20 sm:px-8 sm:pt-32">
         {/* HERO BENTO LIQUID GLASS */}
         <section id="top" className="scroll-mt-28">
-          <div className="grid gap-6 lg:grid-cols-[1.35fr_0.9fr]">
+          <div className="grid items-stretch gap-6 lg:grid-cols-[1.35fr_0.9fr]">
             {/* Kartu Utama Hero */}
             <div className="liquid-glass flex flex-col justify-between rounded-[36px] p-8 sm:p-12">
               <div>
@@ -380,13 +514,13 @@ export default function App() {
               </div>
             </div>
 
-            {/* Kartu Widget Foto Profil Liquid Glass */}
-            <div className="liquid-glass relative flex flex-col justify-between overflow-hidden rounded-[36px] p-4 sm:p-5">
-              <div className="relative aspect-square w-full overflow-hidden rounded-[28px]">
+            {/* Kartu Widget Foto Profil Penuh dari Atas ke Bawah */}
+            <div className="liquid-glass relative flex min-h-[380px] overflow-hidden rounded-[36px] p-3 sm:min-h-[440px]">
+              <div className="relative h-full w-full flex-1 overflow-hidden rounded-[28px]">
                 <img
                   src={profil.foto}
                   alt={profil.nama}
-                  className="h-full w-full object-cover"
+                  className="absolute inset-0 h-full w-full object-cover object-top"
                 />
                 <div className="liquid-glass absolute right-3 bottom-3 left-3 flex items-center justify-between rounded-2xl px-4 py-3">
                   <div>
@@ -406,25 +540,26 @@ export default function App() {
           </div>
         </section>
 
-        {/* KEAHLIAN - KARTU MELINGKAR DENGAN EFEK FADE & INERSIA */}
+        {/* KEAHLIAN - ORBIT 3D INTERAKTIF */}
         <section id="keahlian" className="scroll-mt-28">
           <Reveal>
             <div className="liquid-glass rounded-[36px] p-6 sm:p-12">
               <div className="mx-auto max-w-2xl text-center">
                 <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#3a3a3c]">
-                  Bahasa & Teknologi
+                  3D Tech Stack Orbit
                 </span>
                 <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-4xl">
                   Bahasa yang Saya Pahami
                 </h2>
                 <p className="mt-2 text-sm text-[#3a3a3c] sm:text-base">
-                  Kartu berputar mulus dengan efek bias kedalaman. Arahkan
-                  kursor untuk memperlambat putaran secara perlahan.
+                  Cincin 3D interaktif yang terus mengorbit secara mulus.
+                  Gerakkan kursor untuk memiringkan sudut pandang 3D, atau
+                  geser cincin untuk memutarnya.
                 </p>
               </div>
 
               <div className="mt-4">
-                <KartuKeahlianMelingkar daftar={keahlian} />
+                <KartuKeahlian3D daftar={keahlian} />
               </div>
             </div>
           </Reveal>

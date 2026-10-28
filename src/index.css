@@ -69,6 +69,18 @@ body {
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
 }
 
+/* Panggung 3D untuk orbit kartu bahasa */
+.stage-3d {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+.orbit-3d-card {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
 /* Animasi latar cairan pastel (ambient mesh) di belakang kaca */
 @keyframes blob-float-1 {
   0%,
