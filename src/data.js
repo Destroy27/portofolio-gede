@@ -1,5 +1,7 @@
 // Ubah isi file ini untuk memperbarui seluruh portofolio.
 
+const basis = import.meta.env.BASE_URL;
+
 export const profil = {
   nama: "Gede Pasek Ary Sugiantara",
   peran: "Web Developer dan Gamer",
@@ -10,7 +12,7 @@ export const profil = {
     "Di luar pekerjaan koding, saya gemar bermain video game. Kebiasaan ini melatih ketelitian, strategi, dan kerja sama tim yang saya bawa ke dalam setiap proyek.",
     "Saya terbuka untuk diskusi proyek, kolaborasi, maupun sekadar bertukar ide tentang teknologi dan video game.",
   ],
-  foto: "/assets/foto-profil.jpeg",
+  foto: `${basis}assets/foto-profil.jpeg`,
   github: "https://github.com/Destroy27",
 };
 
@@ -21,7 +23,7 @@ export const proyek = [
     deskripsi:
       "Website untuk jaringan coffee atau yang lebih dikenal dengan nama Jarco.",
     link: "#",
-    gambar: "/assets/logo-jarco.jpg",
+    gambar: `${basis}assets/logo-jarco.jpg`,
   },
   {
     nomor: "02",
@@ -29,7 +31,7 @@ export const proyek = [
     deskripsi:
       "Aplikasi jurnal kebiasaan baik harian untuk murid SD, lengkap dengan pelacakan kegiatan, kalender kemajuan, dan lencana penghargaan.",
     link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
-    gambar: "/assets/Jurnal 7 KAIH.png",
+    gambar: `${basis}assets/Jurnal 7 KAIH.png`,
   },
 ];
 
