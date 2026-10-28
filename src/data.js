@@ -21,25 +21,28 @@ export const proyek = [
     deskripsi:
       "Website untuk jaringan coffee atau yang lebih dikenal dengan nama Jarco.",
     link: "#",
+    gambar: "/assets/logo-jarco.jpg",
   },
   {
     nomor: "02",
-    judul: "Website Jurnal 7 KIAH",
+    judul: "Website Jurnal 7 KAIH",
     deskripsi:
       "Aplikasi jurnal kebiasaan baik harian untuk murid SD, lengkap dengan pelacakan kegiatan, kalender kemajuan, dan lencana penghargaan.",
     link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
+    gambar: "/assets/Jurnal 7 KAIH.png",
   },
 ];
 
 // Daftar ini masih perkiraan. Sesuaikan dengan keahlian Tuan yang sebenarnya.
 export const keahlian = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "React",
-  "Tailwind CSS",
-  "Laravel / PHP",
-  "Java",
+  { nama: "HTML", ikon: "html5" },
+  { nama: "CSS", ikon: "css3" },
+  { nama: "JavaScript", ikon: "javascript" },
+  { nama: "React", ikon: "react" },
+  { nama: "Tailwind CSS", ikon: "tailwindcss" },
+  { nama: "Laravel", ikon: "laravel" },
+  { nama: "PHP", ikon: "php" },
+  { nama: "Java", ikon: "openjdk" },
 ];
 
 export const penghargaan = [

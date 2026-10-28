@@ -44,6 +44,46 @@ function Loader({ onSelesai }) {
   );
 }
 
+function NamaAnimasi({ nama }) {
+  const [baris1, baris2] = nama.split(" ").length > 4
+    ? [nama.split(" ").slice(0, 2).join(" "), nama.split(" ").slice(2).join(" ")]
+    : [nama.split(" ").slice(0, 1).join(" "), nama.split(" ").slice(1).join(" ")];
+
+  const renderBaris = (teks, mulai, shimmer = false) => {
+    const kata = teks.split(" ");
+    let indeks = 0;
+    const offset = 2500;
+    return kata.map((k, w) => (
+      <span key={w} className="mr-[0.28em] inline-block whitespace-nowrap">
+        {k.split("").map((huruf) => {
+          const delay = offset + mulai + indeks * 45;
+          indeks += 1;
+          return (
+            <span key={indeks} className="name-line">
+              <span
+                className={shimmer ? "shimmer" : ""}
+                style={{ animationDelay: `${delay}ms` }}
+              >
+                {huruf}
+              </span>
+            </span>
+          );
+        })}
+      </span>
+    ));
+  };
+
+  return (
+    <h1 className="text-[clamp(2.8rem,9vw,7.5rem)] leading-[0.92] font-extrabold tracking-tight">
+      {renderBaris(baris1, 0)}
+      <br />
+      <span className="serif font-medium italic">
+        {renderBaris(baris2, 250, true)}
+      </span>
+    </h1>
+  );
+}
+
 function Reveal({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
   const [tampil, setTampil] = useState(false);
@@ -154,11 +194,7 @@ export default function App() {
               <span>Bali, Indonesia</span>
             </div>
 
-            <h1 className="text-[clamp(2.8rem,9vw,7.5rem)] leading-[0.92] font-extrabold tracking-tight">
-              GEDE PASEK
-              <br />
-              <span className="serif font-medium italic">Ary Sugiantara</span>
-            </h1>
+            <NamaAnimasi nama={profil.nama} />
 
             <div className="mt-12 grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end">
               <div className="aspect-square max-w-sm overflow-hidden md:order-2 md:ml-auto">
@@ -203,10 +239,10 @@ export default function App() {
               <div key={n} className="flex shrink-0 items-center">
                 {keahlian.map((item) => (
                   <span
-                    key={`${n}-${item}`}
+                    key={`${n}-${item.nama}`}
                     className="mx-6 flex items-center gap-6 text-xl font-extrabold tracking-tight uppercase"
                   >
-                    {item}
+                    {item.nama}
                     <span className="text-[#e0568a]">✳</span>
                   </span>
                 ))}
@@ -232,15 +268,18 @@ export default function App() {
                     className="group grid gap-8 md:grid-cols-2 md:items-center"
                   >
                     <div
-                      className={`aspect-[4/3] overflow-hidden ${warnaProyek[i % warnaProyek.length]} ${
+                      className={`relative aspect-[4/3] overflow-hidden ${warnaProyek[i % warnaProyek.length]} ${
                         i % 2 === 1 ? "md:order-2" : ""
                       }`}
                     >
-                      <div className="flex h-full w-full items-center justify-center transition-transform duration-700 group-hover:scale-105">
-                        <span className="outline-text text-[7rem] leading-none font-extrabold md:text-[10rem]">
-                          {item.nomor}
-                        </span>
-                      </div>
+                      <img
+                        src={item.gambar}
+                        alt={item.judul}
+                        className="h-full w-full object-contain p-6 transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <span className="outline-text absolute top-4 left-5 text-4xl leading-none font-extrabold">
+                        {item.nomor}
+                      </span>
                     </div>
 
                     <div className={i % 2 === 1 ? "md:order-1" : ""}>
@@ -284,16 +323,24 @@ export default function App() {
               </div>
             </Reveal>
 
-            <div className="grid gap-x-10 gap-y-6 md:grid-cols-2">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
               {keahlian.map((item, i) => (
-                <Reveal key={item} delay={i * 60}>
-                  <div className="flex items-baseline justify-between border-b border-[#f3efe7]/20 py-4">
-                    <span className="text-3xl font-bold tracking-tight">
-                      {item}
-                    </span>
-                    <span className="text-xs tracking-widest uppercase text-[#f3efe7]/50">
-                      0{i + 1}
-                    </span>
+                <Reveal key={item.nama} delay={i * 60}>
+                  <div className="group flex h-full flex-col justify-between gap-6 rounded-xl border border-[#f3efe7]/15 p-5 transition hover:border-[#e0568a] hover:bg-[#f3efe7]/5">
+                    <img
+                      src={`https://cdn.simpleicons.org/${item.ikon}/ffffff`}
+                      alt={`Logo ${item.nama}`}
+                      loading="lazy"
+                      className="h-9 w-9"
+                    />
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-bold tracking-tight">
+                        {item.nama}
+                      </span>
+                      <span className="text-xs tracking-widest uppercase text-[#f3efe7]/50">
+                        0{i + 1}
+                      </span>
+                    </div>
                   </div>
                 </Reveal>
               ))}
