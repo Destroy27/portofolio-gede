@@ -1,28 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  profil,
-  proyek,
-  keahlian,
-  penghargaan,
-  pelatihan,
-} from "./data.js";
+import { profil, proyek, keahlian } from "./data.js";
 
 const menu = [
   { label: "Work", href: "#work" },
   { label: "Keahlian", href: "#keahlian" },
   { label: "Tentang", href: "#about" },
-  { label: "Penghargaan", href: "#awards" },
-  { label: "Pelatihan", href: "#trainings" },
+  { label: "Kontak", href: "#kontak" },
 ];
-
-const warnaProyek = ["bg-[#f9c5d1]", "bg-[#c9e7dd]"];
 
 function Loader({ onSelesai }) {
   const [keluar, setKeluar] = useState(false);
 
   useEffect(() => {
-    const a = setTimeout(() => setKeluar(true), 2000);
-    const b = setTimeout(onSelesai, 2500);
+    const a = setTimeout(() => setKeluar(true), 1200);
+    const b = setTimeout(onSelesai, 1700);
     return () => {
       clearTimeout(a);
       clearTimeout(b);
@@ -45,27 +36,25 @@ function Loader({ onSelesai }) {
 }
 
 function NamaAnimasi({ nama }) {
-  const [baris1, baris2] = nama.split(" ").length > 4
-    ? [nama.split(" ").slice(0, 2).join(" "), nama.split(" ").slice(2).join(" ")]
-    : [nama.split(" ").slice(0, 1).join(" "), nama.split(" ").slice(1).join(" ")];
+  const bagian = nama.split(" ");
+  const baris1 = bagian.slice(0, 2).join(" ").toUpperCase();
+  const baris2 = bagian.slice(2).join(" ");
 
-  const renderBaris = (teks, mulai, shimmer = false) => {
+  const renderBaris = (teks, mulai, aksen = false) => {
     const kata = teks.split(" ");
     let indeks = 0;
-    const offset = 2500;
     return kata.map((k, w) => (
-      <span key={w} className="mr-[0.28em] inline-block whitespace-nowrap">
+      <span key={w} className="mr-[0.26em] inline-block whitespace-nowrap">
         {k.split("").map((huruf) => {
-          const delay = offset + mulai + indeks * 45;
+          const delay = mulai + indeks * 110;
           indeks += 1;
           return (
-            <span key={indeks} className="name-line">
-              <span
-                className={shimmer ? "shimmer" : ""}
-                style={{ animationDelay: `${delay}ms` }}
-              >
-                {huruf}
-              </span>
+            <span
+              key={indeks}
+              className={aksen ? "idle-char-accent" : "idle-char"}
+              style={{ animationDelay: `${delay}ms` }}
+            >
+              {huruf}
             </span>
           );
         })}
@@ -74,11 +63,10 @@ function NamaAnimasi({ nama }) {
   };
 
   return (
-    <h1 className="text-[clamp(2.8rem,9vw,7.5rem)] leading-[0.92] font-extrabold tracking-tight">
-      {renderBaris(baris1, 0)}
-      <br />
-      <span className="serif font-medium italic">
-        {renderBaris(baris2, 250, true)}
+    <h1 className="hero-name-enter py-2 text-[clamp(2.6rem,8.5vw,7.2rem)] leading-[1.08] font-extrabold tracking-tight">
+      <span className="block">{renderBaris(baris1, 0, false)}</span>
+      <span className="serif mt-1 block font-medium italic">
+        {renderBaris(baris2, 400, true)}
       </span>
     </h1>
   );
@@ -136,7 +124,7 @@ export default function App() {
     <div className="min-h-screen bg-[#f3efe7] text-[#16161a] antialiased">
       {memuat && <Loader onSelesai={selesaiMemuat} />}
 
-      <header className="fixed inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 bg-[#f3efe7]/85 backdrop-blur-md">
         <div className="flex items-center justify-between px-6 py-5 md:px-12">
           <a href="#top" className="text-lg font-extrabold tracking-tight">
             Gede<span className="text-[#e0568a]">.</span>
@@ -268,18 +256,15 @@ export default function App() {
                     className="group grid gap-8 md:grid-cols-2 md:items-center"
                   >
                     <div
-                      className={`relative aspect-[4/3] overflow-hidden ${warnaProyek[i % warnaProyek.length]} ${
+                      className={`overflow-hidden ${
                         i % 2 === 1 ? "md:order-2" : ""
                       }`}
                     >
                       <img
                         src={item.gambar}
                         alt={item.judul}
-                        className="h-full w-full object-contain p-6 transition-transform duration-700 group-hover:scale-105"
+                        className="max-h-[380px] w-full object-contain transition-transform duration-700 group-hover:scale-105"
                       />
-                      <span className="outline-text absolute top-4 left-5 text-4xl leading-none font-extrabold">
-                        {item.nomor}
-                      </span>
                     </div>
 
                     <div className={i % 2 === 1 ? "md:order-1" : ""}>
@@ -371,67 +356,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* PENGHARGAAN */}
-        <section id="awards" className="scroll-mt-20 px-6 py-24 md:px-12">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <GarisAtas nomor="04" judul="Penghargaan" />
-            </Reveal>
-
-            <div className="grid gap-6">
-              {penghargaan.map((item) => (
-                <Reveal key={item.judul}>
-                  <article className="grid gap-6 border-2 border-[#16161a] p-8 md:grid-cols-[auto_1fr] md:items-center md:p-12">
-                    <div className="serif text-7xl font-medium italic md:text-8xl">
-                      #{item.peringkat}
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-extrabold tracking-tight md:text-4xl">
-                        {item.judul}
-                      </h3>
-                      <p className="mt-3 max-w-xl leading-relaxed text-[#16161a]/70">
-                        {item.keterangan}
-                      </p>
-                    </div>
-                  </article>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* PELATIHAN */}
-        <section id="trainings" className="scroll-mt-20 px-6 py-24 md:px-12">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <GarisAtas nomor="05" judul="Pelatihan" />
-            </Reveal>
-
-            {pelatihan.length > 0 ? (
-              <div className="grid gap-6">
-                {pelatihan.map((item) => (
-                  <Reveal key={item.judul}>
-                    <article className="flex flex-col justify-between gap-2 border-b border-[#16161a]/30 py-6 md:flex-row md:items-baseline">
-                      <h3 className="text-2xl font-bold tracking-tight">
-                        {item.judul}
-                      </h3>
-                      <p className="text-[#16161a]/60">
-                        {item.penyelenggara} · {item.tahun}
-                      </p>
-                    </article>
-                  </Reveal>
-                ))}
-              </div>
-            ) : (
-              <Reveal>
-                <p className="serif text-xl italic text-[#16161a]/50">
-                  Data pelatihan belum ditambahkan.
-                </p>
-              </Reveal>
-            )}
           </div>
         </section>
 

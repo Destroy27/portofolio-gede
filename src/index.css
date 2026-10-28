@@ -32,10 +32,10 @@ body {
   animation: marquee 22s linear infinite;
 }
 
-@keyframes rise-in {
+@keyframes hero-enter {
   from {
     opacity: 0;
-    transform: translateY(110%);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -43,40 +43,42 @@ body {
   }
 }
 
-.name-line {
-  display: inline-block;
-  overflow: hidden;
+.hero-name-enter {
+  animation: hero-enter 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.name-line > span {
-  display: inline-block;
-  opacity: 0;
-  animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: 0% 50%;
-  }
+@keyframes name-idle {
+  0%,
   100% {
-    background-position: 200% 50%;
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
   }
 }
 
-.shimmer {
-  background: linear-gradient(
-    100deg,
-    #16161a 0%,
-    #16161a 42%,
-    #e0568a 50%,
-    #16161a 58%,
-    #16161a 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 4s ease-in-out infinite;
+@keyframes name-idle-italic {
+  0%,
+  100% {
+    transform: translateY(0);
+    color: #16161a;
+  }
+  50% {
+    transform: translateY(-6px);
+    color: #e0568a;
+  }
+}
+
+.idle-char {
+  display: inline-block;
+  animation: name-idle 3.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.idle-char-accent {
+  display: inline-block;
+  animation: name-idle-italic 4.2s ease-in-out infinite;
+  will-change: transform, color;
 }
 
 .reveal {
@@ -93,7 +95,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee {
+  .marquee,
+  .hero-name-enter,
+  .idle-char,
+  .idle-char-accent {
     animation: none;
   }
 
