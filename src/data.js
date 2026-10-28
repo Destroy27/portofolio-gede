@@ -26,7 +26,7 @@ export const proyek = [
     nomor: "02",
     judul: "Website Jurnal 7 KIAH",
     deskripsi:
-      "Website jurnal 7 KIAH sebagai wadah publikasi tulisan dan karya ilmiah.",
+      "Aplikasi jurnal kebiasaan baik harian untuk murid SD, lengkap dengan pelacakan kegiatan, kalender kemajuan, dan lencana penghargaan.",
     link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
   },
 ];
