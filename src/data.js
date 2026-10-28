@@ -4,13 +4,14 @@ const basis = import.meta.env.BASE_URL;
 
 export const profil = {
   nama: "Gede Pasek Ary Sugiantara",
-  peran: "Web Developer dan Gamer",
+  peran: "Web Developer & Gamer",
+  lokasi: "Bali, Indonesia",
   ringkas:
-    "Saya membangun website yang bersih, responsif, dan berfokus pada pengalaman pengguna. Di luar dunia koding, saya suka bermain video game.",
+    "Membangun website modern yang bersih, responsif, dan nyaman digunakan. Di luar dunia pemrograman, saya aktif bermain dan mengeksplorasi video game.",
   tentang: [
-    "Nama saya Gede Pasek Ary Sugiantara. Saya tertarik pada pengembangan web dan selalu senang mencoba hal baru dalam membangun sebuah produk digital.",
-    "Di luar pekerjaan koding, saya gemar bermain video game. Kebiasaan ini melatih ketelitian, strategi, dan kerja sama tim yang saya bawa ke dalam setiap proyek.",
-    "Saya terbuka untuk diskusi proyek, kolaborasi, maupun sekadar bertukar ide tentang teknologi dan video game.",
+    "Nama saya Gede Pasek Ary Sugiantara. Saya berfokus pada pengembangan web modern dengan antarmuka yang rapi, intuitif, dan cepat diakses di berbagai perangkat.",
+    "Di luar aktivitas koding, saya memiliki hobi bermain video game. Kebiasaan tersebut melatih ketelitian, pemecahan masalah, strategi, serta koordinasi tim yang saya terapkan saat membangun produk digital.",
+    "Saya selalu terbuka untuk diskusi proyek baru, kolaborasi kreatif, maupun bertukar pikiran seputar teknologi web dan dunia game.",
   ],
   foto: `${basis}assets/foto-profil.jpeg`,
   github: "https://github.com/Destroy27",
@@ -19,42 +20,79 @@ export const profil = {
 export const proyek = [
   {
     nomor: "01",
+    kategori: "Brand & Web Platform",
     judul: "Website Jarco",
     deskripsi:
-      "Website untuk jaringan coffee atau yang lebih dikenal dengan nama Jarco.",
+      "Platform web untuk Jaringan Coffee (Jarco) yang dirancang dengan tampilan bersih dan navigasi produk yang jelas.",
     link: "#",
     gambar: `${basis}assets/logo-jarco.jpg`,
   },
   {
     nomor: "02",
+    kategori: "Web Application",
     judul: "Website Jurnal 7 KAIH",
     deskripsi:
-      "Aplikasi jurnal kebiasaan baik harian untuk murid SD, lengkap dengan pelacakan kegiatan, kalender kemajuan, dan lencana penghargaan.",
+      "Aplikasi jurnal kebiasaan baik harian untuk siswa SD Negeri 4 Jehem, dilengkapi pelacakan kegiatan harian, kalender kemajuan, serta lencana penghargaan.",
     link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
     gambar: `${basis}assets/Jurnal 7 KAIH.png`,
   },
 ];
 
-// Daftar ini masih perkiraan. Sesuaikan dengan keahlian Tuan yang sebenarnya.
 export const keahlian = [
-  { nama: "HTML", ikon: "html5" },
-  { nama: "CSS", ikon: "css3" },
-  { nama: "JavaScript", ikon: "javascript" },
-  { nama: "React", ikon: "react" },
-  { nama: "Tailwind CSS", ikon: "tailwindcss" },
-  { nama: "Laravel", ikon: "laravel" },
-  { nama: "PHP", ikon: "php" },
-  { nama: "Java", ikon: "openjdk" },
-];
-
-export const penghargaan = [
   {
-    peringkat: "2",
-    judul: "Juara 2 Lomba Video Game Tingkat Nasional",
-    keterangan:
-      "Pencapaian yang membanggakan dan menjadi motivasi untuk terus berkembang di bidang teknologi dan gaming.",
+    nama: "HTML5",
+    kategori: "Struktur Web",
+    warna: "#E34F26",
+    bgGradasi: "linear-gradient(145deg, rgba(227,79,38,0.18), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg",
+  },
+  {
+    nama: "CSS3",
+    kategori: "Tata Letak & Visual",
+    warna: "#1572B6",
+    bgGradasi: "linear-gradient(145deg, rgba(21,114,182,0.18), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg",
+  },
+  {
+    nama: "JavaScript",
+    kategori: "Logika Interaktif",
+    warna: "#EAB308",
+    bgGradasi: "linear-gradient(145deg, rgba(247,223,30,0.24), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+  },
+  {
+    nama: "React",
+    kategori: "Frontend UI",
+    warna: "#00B4D8",
+    bgGradasi: "linear-gradient(145deg, rgba(97,218,251,0.22), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
+  },
+  {
+    nama: "Tailwind CSS",
+    kategori: "Design System",
+    warna: "#06B6D4",
+    bgGradasi: "linear-gradient(145deg, rgba(6,182,212,0.20), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
+  },
+  {
+    nama: "Laravel",
+    kategori: "Framework Backend",
+    warna: "#FF2D20",
+    bgGradasi: "linear-gradient(145deg, rgba(255,45,32,0.18), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg",
+  },
+  {
+    nama: "PHP",
+    kategori: "Pemrograman Server",
+    warna: "#777BB4",
+    bgGradasi: "linear-gradient(145deg, rgba(119,123,180,0.22), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
+  },
+  {
+    nama: "Java",
+    kategori: "Pemrograman Objek",
+    warna: "#ED8B00",
+    bgGradasi: "linear-gradient(145deg, rgba(237,139,0,0.20), rgba(255,255,255,0.92))",
+    logo: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
   },
 ];
-
-// Isi dengan pelatihan yang pernah diikuti, contoh: { judul: "...", penyelenggara: "...", tahun: "..." }
-export const pelatihan = [];
