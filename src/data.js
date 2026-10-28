@@ -10,7 +10,7 @@ export const profil = {
     "Di luar pekerjaan koding, saya gemar bermain video game. Kebiasaan ini melatih ketelitian, strategi, dan kerja sama tim yang saya bawa ke dalam setiap proyek.",
     "Saya terbuka untuk diskusi proyek, kolaborasi, maupun sekadar bertukar ide tentang teknologi dan video game.",
   ],
-  foto: "/assets/foto-profil.jpg",
+  foto: "/assets/foto-profil.jpeg",
   github: "https://github.com/Destroy27",
 };
 
@@ -27,7 +27,7 @@ export const proyek = [
     judul: "Website Jurnal 7 KIAH",
     deskripsi:
       "Website jurnal 7 KIAH sebagai wadah publikasi tulisan dan karya ilmiah.",
-    link: "#",
+    link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
   },
 ];
 
