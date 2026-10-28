@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { profil, proyek, keahlian } from "./data.js";
+import LatarBulanSalju3D from "./LatarBulanSalju3D.jsx";
 
 const menu = [
   { label: "Beranda", href: "#top" },
@@ -116,20 +117,20 @@ function KartuKeahlian3D({ daftar }) {
       }
     }
     if (infoTitikRef.current) {
-      infoTitikRef.current.style.backgroundColor = item ? item.warna : "#0071e3";
+      infoTitikRef.current.style.backgroundColor = item ? item.warna : "#38bdf8";
       infoTitikRef.current.style.boxShadow = item
         ? `0 0 12px ${item.warna}`
-        : "0 0 10px #0071e3";
+        : "0 0 10px #38bdf8";
     }
     pilRefs.current.forEach((pil, idx) => {
       if (!pil) return;
       const terpilih = idx === indeks;
       pil.style.borderColor = terpilih
         ? daftar[idx].warna
-        : "rgba(255,255,255,0.85)";
+        : "rgba(255,255,255,0.28)";
       pil.style.transform = terpilih ? "translateY(-2px) scale(1.04)" : "none";
       pil.style.boxShadow = terpilih
-        ? `0 10px 24px -6px ${daftar[idx].warna}55`
+        ? `0 10px 24px -6px ${daftar[idx].warna}66`
         : "";
     });
   };
@@ -175,7 +176,6 @@ function KartuKeahlian3D({ daftar }) {
         Math.min(1, dt * 4.5);
 
       const mobile = window.innerWidth < 640;
-      // Radius dibuat lebar agar pada titik pergantian kedalaman (atas & bawah) kartu tidak pernah bersentuhan/patah
       const radiusX = mobile ? 142 : 258;
       const radiusY = mobile ? 66 : 86;
       const radiusZ = mobile ? 95 : 165;
@@ -194,12 +194,10 @@ function KartuKeahlian3D({ daftar }) {
         const cosS = Math.cos(sudut);
         const sinS = Math.sin(sudut);
 
-        // Kedalaman: 0 (paling belakang) hingga 1 (paling depan)
         const kedalaman = (sinS + 1) / 2;
         const kedalamanHalus =
-          kedalaman * kedalaman * (3 - 2 * kedalaman); // smoothstep
+          kedalaman * kedalaman * (3 - 2 * kedalaman);
 
-        // Posisi 3D murni dengan ayunan mengambang lembut
         const x = cosS * radiusX + currentTiltRef.current.x * 14 * (kedalaman - 0.5);
         const y =
           sinS * radiusY +
@@ -208,7 +206,6 @@ function KartuKeahlian3D({ daftar }) {
           currentTiltRef.current.y * 10;
         const z = sinS * radiusZ + bobot * 48;
 
-        // Rotasi perspektif 3D mengikuti lengkungan cincin silinder
         const rotY = -cosS * 32 * (1 - bobot * 0.75) + currentTiltRef.current.x * 8;
         const rotX = -sinS * 8 * (1 - bobot * 0.8) - currentTiltRef.current.y * 8;
         const rotZ = cosS * 4 * (1 - bobot);
@@ -216,7 +213,6 @@ function KartuKeahlian3D({ daftar }) {
         const skala = 0.78 + kedalamanHalus * 0.24 + bobot * 0.12;
         const opasitas = 0.34 + kedalamanHalus * 0.66 + bobot * (1 - (0.34 + kedalamanHalus * 0.66));
 
-        // Karena pada titik sinS = ±1 jarak antar kartu > lebar kartu, zIndex tidak akan pernah bertabrakan
         const zIndex = Math.round(kedalaman * 100) + (bobot > 0.6 ? 120 : 10);
 
         el.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) rotateZ(${rotZ.toFixed(2)}deg) scale(${skala.toFixed(3)})`;
@@ -272,11 +268,11 @@ function KartuKeahlian3D({ daftar }) {
         {/* Cincin orbit 3D berlapis di latar panggung */}
         <div
           style={{ transform: "rotateX(68deg)" }}
-          className="pointer-events-none absolute h-[260px] w-[280px] rounded-full border border-white/80 shadow-[0_0_50px_rgba(59,130,246,0.18),inset_0_0_40px_rgba(255,255,255,0.6)] sm:h-[340px] sm:w-[520px]"
+          className="pointer-events-none absolute h-[260px] w-[280px] rounded-full border border-sky-200/35 shadow-[0_0_50px_rgba(56,189,248,0.22),inset_0_0_40px_rgba(186,230,253,0.18)] sm:h-[340px] sm:w-[520px]"
         />
         <div
           style={{ transform: "rotateX(68deg)" }}
-          className="pointer-events-none absolute h-[190px] w-[200px] rounded-full border border-dashed border-sky-400/35 sm:h-[250px] sm:w-[390px]"
+          className="pointer-events-none absolute h-[190px] w-[200px] rounded-full border border-dashed border-sky-300/35 sm:h-[250px] sm:w-[390px]"
         />
 
         {/* Inti Hologram 3D di Tengah Cincin */}
@@ -284,7 +280,7 @@ function KartuKeahlian3D({ daftar }) {
           <div className="mb-1.5 flex items-center gap-2">
             <span
               ref={infoTitikRef}
-              className="h-2 w-2 rounded-full bg-[#0071e3] shadow-[0_0_10px_#0071e3] transition-colors duration-300"
+              className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8] transition-colors duration-300"
             />
             <img
               ref={infoLogoRef}
@@ -295,13 +291,13 @@ function KartuKeahlian3D({ daftar }) {
           </div>
           <p
             ref={infoNamaRef}
-            className="text-xs font-extrabold tracking-tight text-[#141417] sm:text-sm"
+            className="text-xs font-extrabold tracking-tight text-white sm:text-sm"
           >
             8 Bahasa & Framework
           </p>
           <p
             ref={infoKategoriRef}
-            className="mt-0.5 text-[10px] font-medium text-[#515154]"
+            className="mt-0.5 text-[10px] font-medium text-sky-100/75"
           >
             Orbit 3D Interaktif · Geser atau Sentuh
           </p>
@@ -321,10 +317,10 @@ function KartuKeahlian3D({ daftar }) {
             }
             style={{
               background: item.bgGradasi,
-              borderColor: `${item.warna}66`,
-              boxShadow: `0 18px 38px -10px ${item.warna}40, inset 0 1.5px 1px rgba(255,255,255,0.95), inset 0 -1px 2px ${item.warna}25`,
+              borderColor: `${item.warna}88`,
+              boxShadow: `0 18px 38px -10px ${item.warna}50, inset 0 1.5px 1px rgba(255,255,255,0.55), inset 0 -1px 2px ${item.warna}35`,
             }}
-            className="orbit-3d-card group absolute flex h-34 w-26 cursor-pointer flex-col items-center justify-between rounded-[24px] border-2 p-3 text-center backdrop-blur-xl sm:h-40 sm:w-32 sm:p-3.5"
+            className="orbit-3d-card group absolute flex h-34 w-26 cursor-pointer flex-col items-center justify-between rounded-[24px] border p-3 text-center backdrop-blur-xl sm:h-40 sm:w-32 sm:p-3.5"
           >
             <div className="flex w-full items-center justify-between">
               <span
@@ -337,8 +333,8 @@ function KartuKeahlian3D({ daftar }) {
               <span
                 className="rounded-full px-1.5 py-0.5 text-[9px] font-bold tracking-wide sm:text-[10px]"
                 style={{
-                  backgroundColor: `${item.warna}20`,
-                  color: item.warna,
+                  backgroundColor: `${item.warna}30`,
+                  color: "#ffffff",
                 }}
               >
                 0{i + 1}
@@ -347,7 +343,7 @@ function KartuKeahlian3D({ daftar }) {
 
             <div
               style={{
-                boxShadow: `0 8px 20px -6px ${item.warna}45`,
+                boxShadow: `0 8px 20px -6px ${item.warna}55`,
               }}
               className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/90 p-2.5 ring-1 ring-white transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14"
             >
@@ -359,10 +355,10 @@ function KartuKeahlian3D({ daftar }) {
             </div>
 
             <div>
-              <p className="text-xs font-extrabold tracking-tight text-[#141417] sm:text-[13px]">
+              <p className="text-xs font-extrabold tracking-tight text-white sm:text-[13px]">
                 {item.nama}
               </p>
-              <p className="mt-0.5 line-clamp-1 text-[9px] font-semibold text-[#515154] sm:text-[10px]">
+              <p className="mt-0.5 line-clamp-1 text-[9px] font-semibold text-sky-100/80 sm:text-[10px]">
                 {item.kategori}
               </p>
             </div>
@@ -390,7 +386,7 @@ function KartuKeahlian3D({ daftar }) {
             onClick={() =>
               pilihKartu(hoverIndeksRef.current === i ? -1 : i)
             }
-            className="liquid-glass-sub inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#141417] transition duration-300"
+            className="liquid-glass-sub inline-flex cursor-pointer items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-white transition duration-300"
           >
             <img src={item.logo} alt="" className="h-4 w-4 object-contain" />
             <span>{item.nama}</span>
@@ -405,23 +401,25 @@ export default function App() {
   const [menuTerbuka, setMenuTerbuka] = useState(false);
 
   return (
-    <div className="relative min-h-screen text-[#141417] antialiased">
-      {/* Latar cairan warna pastel agar efek bias Liquid Glass terlihat nyata */}
+    <div className="relative min-h-screen text-white antialiased">
+      {/* Latar cahaya aurora lembut */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="ambient-blob-1 absolute -top-24 left-[8%] h-[420px] w-[420px] rounded-full bg-sky-300/45 blur-[95px]" />
-        <div className="ambient-blob-2 absolute top-[28%] right-[6%] h-[440px] w-[440px] rounded-full bg-pink-300/40 blur-[100px]" />
-        <div className="ambient-blob-1 absolute bottom-[6%] left-[22%] h-[380px] w-[380px] rounded-full bg-indigo-200/45 blur-[95px]" />
-        <div className="ambient-blob-2 absolute top-[62%] left-[4%] h-[300px] w-[300px] rounded-full bg-teal-200/40 blur-[85px]" />
+        <div className="ambient-blob-1 absolute -top-24 left-[8%] h-[420px] w-[420px] rounded-full bg-sky-500/20 blur-[110px]" />
+        <div className="ambient-blob-2 absolute top-[28%] right-[6%] h-[440px] w-[440px] rounded-full bg-indigo-500/20 blur-[110px]" />
+        <div className="ambient-blob-1 absolute bottom-[6%] left-[22%] h-[380px] w-[380px] rounded-full bg-fuchsia-500/15 blur-[110px]" />
       </div>
+
+      {/* Bulan 3D & Hujan Salju 3D yang ikut bergerak saat halaman di-scroll */}
+      <LatarBulanSalju3D />
 
       {/* Navigasi Mengambang Liquid Glass ala iOS */}
       <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
         <div className="liquid-glass flex w-full max-w-3xl items-center justify-between rounded-full px-4 py-2.5 sm:px-6">
           <a
             href="#top"
-            className="flex items-center gap-2.5 text-sm font-bold tracking-tight"
+            className="flex items-center gap-2.5 text-sm font-bold tracking-tight text-white"
           >
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.75)]" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
             <span>Gede Pasek</span>
           </a>
 
@@ -430,7 +428,7 @@ export default function App() {
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#3a3a3c] transition hover:bg-white/60 hover:text-[#141417]"
+                className="rounded-full px-3.5 py-1.5 text-xs font-semibold text-sky-100/80 transition hover:bg-white/15 hover:text-white"
               >
                 {item.label}
               </a>
@@ -441,7 +439,7 @@ export default function App() {
             href={profil.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden rounded-full bg-[#141417] px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-[#2c2c30] md:inline-block"
+            className="hidden rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#0b132b] transition hover:bg-sky-100 md:inline-block"
           >
             GitHub
           </a>
@@ -453,8 +451,8 @@ export default function App() {
             aria-label="Buka menu"
             className="flex flex-col gap-1 p-1.5 md:hidden"
           >
-            <span className="h-0.5 w-5 rounded-full bg-[#141417]" />
-            <span className="h-0.5 w-5 rounded-full bg-[#141417]" />
+            <span className="h-0.5 w-5 rounded-full bg-white" />
+            <span className="h-0.5 w-5 rounded-full bg-white" />
           </button>
         </div>
 
@@ -465,7 +463,7 @@ export default function App() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuTerbuka(false)}
-                className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-[#141417] transition hover:bg-white/50"
+                className="rounded-2xl px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
               >
                 {item.label}
               </a>
@@ -474,25 +472,25 @@ export default function App() {
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl space-y-16 px-4 pt-28 pb-20 sm:px-8 sm:pt-32">
+      <main className="relative z-10 mx-auto max-w-6xl space-y-16 px-4 pt-28 pb-20 sm:px-8 sm:pt-32">
         {/* HERO BENTO LIQUID GLASS */}
         <section id="top" className="scroll-mt-28">
           <div className="grid items-stretch gap-6 lg:grid-cols-[1.35fr_0.9fr]">
             {/* Kartu Utama Hero */}
             <div className="liquid-glass flex flex-col justify-between rounded-[36px] p-8 sm:p-12">
               <div>
-                <div className="liquid-glass-sub mb-6 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-[#1d1d1f]">
-                  <span className="h-2 w-2 rounded-full bg-[#0071e3]" />
+                <div className="liquid-glass-sub mb-6 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-sky-100">
+                  <span className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
                   <span>{profil.lokasi}</span>
                 </div>
 
                 <NamaHero nama={profil.nama} />
 
-                <p className="mt-4 text-base font-semibold text-[#0071e3] sm:text-lg">
+                <p className="mt-4 text-base font-semibold text-sky-300 sm:text-lg">
                   {profil.peran}
                 </p>
 
-                <p className="mt-4 max-w-xl text-base leading-relaxed text-[#3a3a3c] sm:text-lg">
+                <p className="mt-4 max-w-xl text-base leading-relaxed text-sky-100/85 sm:text-lg">
                   {profil.ringkas}
                 </p>
               </div>
@@ -500,14 +498,14 @@ export default function App() {
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <a
                   href="#work"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#141417] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#2c2c30]"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b132b] shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100"
                 >
                   <span>Lihat Karya</span>
                   <span>→</span>
                 </a>
                 <a
                   href="#keahlian"
-                  className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#141417] transition hover:-translate-y-0.5"
+                  className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20"
                 >
                   Bahasa Pemrograman
                 </a>
@@ -524,14 +522,14 @@ export default function App() {
                 />
                 <div className="liquid-glass absolute right-3 bottom-3 left-3 flex items-center justify-between rounded-2xl px-4 py-3">
                   <div>
-                    <p className="text-xs font-bold text-[#141417]">
+                    <p className="text-xs font-bold text-white">
                       {profil.nama}
                     </p>
-                    <p className="text-[11px] font-medium text-[#3a3a3c]">
+                    <p className="text-[11px] font-medium text-sky-100/85">
                       {profil.peran}
                     </p>
                   </div>
-                  <span className="rounded-full bg-[#141417] px-3 py-1 text-[11px] font-semibold text-white">
+                  <span className="rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-[#0b132b]">
                     Aktif
                   </span>
                 </div>
@@ -545,13 +543,13 @@ export default function App() {
           <Reveal>
             <div className="liquid-glass rounded-[36px] p-6 sm:p-12">
               <div className="mx-auto max-w-2xl text-center">
-                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#3a3a3c]">
+                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-200">
                   3D Tech Stack Orbit
                 </span>
-                <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-4xl">
+                <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
                   Bahasa yang Saya Pahami
                 </h2>
-                <p className="mt-2 text-sm text-[#3a3a3c] sm:text-base">
+                <p className="mt-2 text-sm text-sky-100/80 sm:text-base">
                   Cincin 3D interaktif yang terus mengorbit secara mulus.
                   Gerakkan kursor untuk memiringkan sudut pandang 3D, atau
                   geser cincin untuk memutarnya.
@@ -565,19 +563,19 @@ export default function App() {
           </Reveal>
         </section>
 
-        {/* KARYA TERPILIH (LIQUID GLASS, TANPA BACKGROUND WARNA TAMBAHAN) */}
+        {/* KARYA TERPILIH (LIQUID GLASS, SUDUT MELENGKUNG) */}
         <section id="work" className="scroll-mt-28">
           <Reveal>
             <div className="mb-8 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
               <div>
-                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#3a3a3c]">
+                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-200">
                   Karya Terpilih
                 </span>
-                <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-4xl">
+                <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
                   Proyek yang Pernah Dibuat
                 </h2>
               </div>
-              <p className="text-sm text-[#3a3a3c]">
+              <p className="text-sm text-sky-100/75">
                 Menampilkan 2 proyek pilihan
               </p>
             </div>
@@ -598,7 +596,7 @@ export default function App() {
                 >
                   <div>
                     <div className="flex justify-center">
-                      <div className="inline-flex overflow-hidden rounded-[26px] border border-white/85 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.14)]">
+                      <div className="inline-flex overflow-hidden rounded-[26px] border border-white/40 shadow-[0_14px_32px_-10px_rgba(2,6,23,0.5)]">
                         <img
                           src={item.gambar}
                           alt={item.judul}
@@ -608,25 +606,25 @@ export default function App() {
                     </div>
 
                     <div className="mt-6 flex items-center gap-2">
-                      <span className="liquid-glass-sub rounded-full px-3 py-1 text-xs font-semibold text-[#3a3a3c]">
+                      <span className="liquid-glass-sub rounded-full px-3 py-1 text-xs font-semibold text-sky-100">
                         {item.kategori}
                       </span>
-                      <span className="text-xs font-semibold text-[#6e6e73]">
+                      <span className="text-xs font-semibold text-sky-200/70">
                         #{item.nomor}
                       </span>
                     </div>
 
-                    <h3 className="mt-3 text-2xl font-bold tracking-tight text-[#141417]">
+                    <h3 className="mt-3 text-2xl font-bold tracking-tight text-white">
                       {item.judul}
                     </h3>
 
-                    <p className="mt-2 text-sm leading-relaxed text-[#3a3a3c] sm:text-base">
+                    <p className="mt-2 text-sm leading-relaxed text-sky-100/80 sm:text-base">
                       {item.deskripsi}
                     </p>
                   </div>
 
                   <div className="mt-6 pt-4">
-                    <span className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-[#0071e3] transition group-hover:bg-[#0071e3] group-hover:text-white">
+                    <span className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-sky-200 transition group-hover:bg-white group-hover:text-[#0b132b]">
                       <span>Kunjungi Website</span>
                       <span>↗</span>
                     </span>
@@ -642,13 +640,13 @@ export default function App() {
           <div className="grid gap-6 md:grid-cols-[1.3fr_0.7fr]">
             <Reveal>
               <div className="liquid-glass h-full rounded-[32px] p-8 sm:p-10">
-                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#3a3a3c]">
+                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-200">
                   Tentang Saya
                 </span>
-                <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-3xl">
+                <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
                   Mengenal Lebih Dekat
                 </h2>
-                <div className="mt-6 space-y-4 text-base leading-relaxed text-[#3a3a3c]">
+                <div className="mt-6 space-y-4 text-base leading-relaxed text-sky-100/85">
                   {profil.tentang.map((paragraf) => (
                     <p key={paragraf}>{paragraf}</p>
                   ))}
@@ -659,13 +657,13 @@ export default function App() {
             <Reveal delay={100}>
               <div className="liquid-glass flex h-full flex-col justify-between rounded-[32px] p-8 sm:p-10">
                 <div>
-                  <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#0071e3]">
+                  <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-300">
                     Minat & Aktivitas
                   </span>
-                  <h3 className="mt-3 text-xl font-bold tracking-tight">
+                  <h3 className="mt-3 text-xl font-bold tracking-tight text-white">
                     Web Development & Video Game
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-[#3a3a3c]">
+                  <p className="mt-3 text-sm leading-relaxed text-sky-100/80">
                     Menggabungkan ketelitian logika pemrograman dengan strategi
                     dan kreativitas dari dunia video game untuk menghasilkan
                     antarmuka web yang nyaman digunakan.
@@ -674,14 +672,14 @@ export default function App() {
 
                 <div className="mt-8 grid grid-cols-2 gap-3">
                   <div className="liquid-glass-sub rounded-2xl p-4">
-                    <p className="text-2xl font-extrabold text-[#141417]">2+</p>
-                    <p className="mt-1 text-xs font-medium text-[#3a3a3c]">
+                    <p className="text-2xl font-extrabold text-white">2+</p>
+                    <p className="mt-1 text-xs font-medium text-sky-100/75">
                       Proyek Web
                     </p>
                   </div>
                   <div className="liquid-glass-sub rounded-2xl p-4">
-                    <p className="text-2xl font-extrabold text-[#0071e3]">8</p>
-                    <p className="mt-1 text-xs font-medium text-[#3a3a3c]">
+                    <p className="text-2xl font-extrabold text-sky-300">8</p>
+                    <p className="mt-1 text-xs font-medium text-sky-100/75">
                       Bahasa & Alat
                     </p>
                   </div>
@@ -695,13 +693,13 @@ export default function App() {
         <section id="kontak" className="scroll-mt-28">
           <Reveal>
             <div className="liquid-glass rounded-[36px] p-8 text-center sm:p-14">
-              <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-[#0071e3]">
+              <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-300">
                 Kontak
               </span>
-              <h2 className="mt-3 text-2xl font-extrabold tracking-tight sm:text-4xl">
+              <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Mari Terhubung di GitHub
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#3a3a3c] sm:text-base">
+              <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-sky-100/80 sm:text-base">
                 Silakan kunjungi profil GitHub saya untuk melihat repositori
                 kode dan perkembangan proyek terbaru yang sedang saya kerjakan.
               </p>
@@ -710,7 +708,7 @@ export default function App() {
                   href={profil.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#141417] px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#2c2c30]"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-[#0b132b] shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100"
                 >
                   <span>Buka GitHub (@Destroy27)</span>
                   <span>↗</span>
@@ -721,8 +719,8 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="border-t border-white/50 py-8 text-center text-xs font-medium text-[#6e6e73]">
-        © 2026 {profil.nama}. Dirancang dengan antarmuka Liquid Glass.
+      <footer className="relative z-10 border-t border-white/15 py-8 text-center text-xs font-medium text-sky-100/60">
+        © 2026 {profil.nama}. Dirancang dengan antarmuka Liquid Glass & WebGL 3D.
       </footer>
     </div>
   );

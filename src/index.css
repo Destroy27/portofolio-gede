@@ -8,30 +8,31 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans",
     system-ui, sans-serif;
-  background-color: #eef1f6;
-  color: #141417;
+  background: linear-gradient(160deg, #090f24 0%, #131f42 45%, #1b2c59 100%);
+  background-attachment: fixed;
+  color: #f8fafc;
   overflow-x: hidden;
 }
 
-/* Efek Liquid Glass khas iOS pada seluruh kartu konten */
+/* Efek Liquid Glass khas iOS / VisionOS di atas latar Bulan & Salju 3D */
 .liquid-glass {
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.62) 0%,
-    rgba(255, 255, 255, 0.34) 48%,
-    rgba(255, 255, 255, 0.54) 100%
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.14) 100%
   );
-  backdrop-filter: blur(30px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(26px) saturate(190%);
+  -webkit-backdrop-filter: blur(26px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   box-shadow:
-    0 24px 48px -12px rgba(15, 23, 42, 0.08),
-    0 4px 12px -2px rgba(15, 23, 42, 0.04),
-    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),
-    inset 1.5px 0 1px 0 rgba(255, 255, 255, 0.75),
-    inset 0 -1.5px 2px 0 rgba(255, 255, 255, 0.5),
-    inset 0 0 28px 0 rgba(255, 255, 255, 0.28);
+    0 24px 54px -12px rgba(2, 6, 23, 0.45),
+    0 4px 16px -2px rgba(2, 6, 23, 0.25),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.55),
+    inset 1px 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1.5px 2px 0 rgba(186, 230, 253, 0.2),
+    inset 0 0 32px 0 rgba(255, 255, 255, 0.06);
 }
 
 .liquid-glass::before {
@@ -42,10 +43,10 @@ body {
   padding: 1px;
   background: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(255, 255, 255, 0.2) 35%,
-    rgba(255, 255, 255, 0.05) 65%,
-    rgba(255, 255, 255, 0.65) 100%
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    rgba(255, 255, 255, 0.03) 65%,
+    rgba(186, 230, 253, 0.4) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -58,15 +59,15 @@ body {
 .liquid-glass-sub {
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.68) 0%,
-    rgba(255, 255, 255, 0.38) 100%
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 100%
   );
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.26);
   box-shadow:
-    0 8px 24px -6px rgba(15, 23, 42, 0.06),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+    0 8px 24px -6px rgba(2, 6, 23, 0.32),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 /* Panggung 3D untuk orbit kartu bahasa */
@@ -81,7 +82,7 @@ body {
   will-change: transform, opacity;
 }
 
-/* Animasi latar cairan pastel (ambient mesh) di belakang kaca */
+/* Animasi latar cairan aurora di belakang Bulan 3D */
 @keyframes blob-float-1 {
   0%,
   100% {
@@ -110,7 +111,7 @@ body {
   animation: blob-float-2 20s ease-in-out infinite;
 }
 
-/* Tipografi Nama Lengkap dengan kilau cairan metalik/aurora yang halus */
+/* Tipografi Nama Lengkap dengan kilau cahaya bulan (lunar liquid sheen) */
 @keyframes liquid-text-shine {
   0% {
     background-position: 0% 50%;
@@ -135,7 +136,8 @@ body {
 
 .hero-name-primary {
   letter-spacing: -0.04em;
-  color: #141417;
+  color: #ffffff;
+  text-shadow: 0 8px 30px rgba(56, 189, 248, 0.22);
   animation: gentle-breathe 5s ease-in-out infinite;
 }
 
@@ -146,12 +148,12 @@ body {
   letter-spacing: -0.035em;
   background-image: linear-gradient(
     115deg,
-    #141417 0%,
-    #1e293b 22%,
-    #2563eb 42%,
-    #db2777 58%,
-    #0f172a 78%,
-    #141417 100%
+    #ffffff 0%,
+    #bae6fd 24%,
+    #7dd3fc 44%,
+    #f9a8d4 62%,
+    #e0f2fe 82%,
+    #ffffff 100%
   );
   background-size: 240% 240%;
   -webkit-background-clip: text;
