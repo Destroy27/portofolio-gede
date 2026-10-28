@@ -211,7 +211,10 @@ function KartuKeahlian3D({ daftar }) {
         const rotZ = cosS * 4 * (1 - bobot);
 
         const skala = 0.78 + kedalamanHalus * 0.24 + bobot * 0.12;
-        const opasitas = 0.34 + kedalamanHalus * 0.66 + bobot * (1 - (0.34 + kedalamanHalus * 0.66));
+        const opasitas =
+          0.9 +
+          kedalamanHalus * 0.1 +
+          bobot * (1 - (0.9 + kedalamanHalus * 0.1));
 
         const zIndex = Math.round(kedalaman * 100) + (bobot > 0.6 ? 120 : 10);
 
@@ -317,10 +320,10 @@ function KartuKeahlian3D({ daftar }) {
             }
             style={{
               background: item.bgGradasi,
-              borderColor: `${item.warna}88`,
-              boxShadow: `0 18px 38px -10px ${item.warna}50, inset 0 1.5px 1px rgba(255,255,255,0.55), inset 0 -1px 2px ${item.warna}35`,
+              borderColor: `${item.warna}cc`,
+              boxShadow: `0 20px 42px -10px ${item.warna}66, inset 0 1.5px 1px rgba(255,255,255,0.65), inset 0 -1px 2px ${item.warna}45`,
             }}
-            className="orbit-3d-card group absolute flex h-34 w-26 cursor-pointer flex-col items-center justify-between rounded-[24px] border p-3 text-center backdrop-blur-xl sm:h-40 sm:w-32 sm:p-3.5"
+            className="orbit-3d-card group absolute flex h-34 w-26 cursor-pointer flex-col items-center justify-between rounded-[24px] border-2 p-3 text-center backdrop-blur-2xl sm:h-40 sm:w-32 sm:p-3.5"
           >
             <div className="flex w-full items-center justify-between">
               <span

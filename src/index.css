@@ -8,31 +8,31 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans",
     system-ui, sans-serif;
-  background: linear-gradient(160deg, #090f24 0%, #131f42 45%, #1b2c59 100%);
+  background: linear-gradient(180deg, #040714 0%, #09122c 45%, #112248 80%, #19315e 100%);
   background-attachment: fixed;
   color: #f8fafc;
   overflow-x: hidden;
 }
 
-/* Efek Liquid Glass khas iOS / VisionOS di atas latar Bulan & Salju 3D */
+/* Efek Liquid Glass khas iOS dengan blur ekstra pekat & transparansi yang dikurangi */
 .liquid-glass {
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.07) 50%,
-    rgba(255, 255, 255, 0.14) 100%
+    rgba(19, 30, 58, 0.86) 0%,
+    rgba(12, 20, 42, 0.82) 50%,
+    rgba(24, 38, 72, 0.86) 100%
   );
-  backdrop-filter: blur(26px) saturate(190%);
-  -webkit-backdrop-filter: blur(26px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(64px) saturate(220%);
+  -webkit-backdrop-filter: blur(64px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.34);
   box-shadow:
-    0 24px 54px -12px rgba(2, 6, 23, 0.45),
-    0 4px 16px -2px rgba(2, 6, 23, 0.25),
-    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.55),
-    inset 1px 0 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1.5px 2px 0 rgba(186, 230, 253, 0.2),
-    inset 0 0 32px 0 rgba(255, 255, 255, 0.06);
+    0 28px 64px -12px rgba(2, 6, 23, 0.72),
+    0 8px 24px -2px rgba(2, 6, 23, 0.45),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 1px 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1.5px 2px 0 rgba(186, 230, 253, 0.25),
+    inset 0 0 48px 0 rgba(255, 255, 255, 0.09);
 }
 
 .liquid-glass::before {
@@ -43,10 +43,10 @@ body {
   padding: 1px;
   background: linear-gradient(
     160deg,
-    rgba(255, 255, 255, 0.65) 0%,
-    rgba(255, 255, 255, 0.12) 35%,
-    rgba(255, 255, 255, 0.03) 65%,
-    rgba(186, 230, 253, 0.4) 100%
+    rgba(255, 255, 255, 0.78) 0%,
+    rgba(255, 255, 255, 0.18) 35%,
+    rgba(255, 255, 255, 0.05) 65%,
+    rgba(186, 230, 253, 0.5) 100%
   );
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
@@ -59,15 +59,16 @@ body {
 .liquid-glass-sub {
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.08) 100%
+    rgba(28, 42, 78, 0.88) 0%,
+    rgba(16, 26, 52, 0.84) 100%
   );
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.26);
+  backdrop-filter: blur(48px) saturate(210%);
+  -webkit-backdrop-filter: blur(48px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.32);
   box-shadow:
-    0 8px 24px -6px rgba(2, 6, 23, 0.32),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+    0 10px 28px -6px rgba(2, 6, 23, 0.5),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 0 24px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* Panggung 3D untuk orbit kartu bahasa */
@@ -82,7 +83,7 @@ body {
   will-change: transform, opacity;
 }
 
-/* Animasi latar cairan aurora di belakang Bulan 3D */
+/* Animasi latar cairan aurora di belakang ruang angkasa 3D */
 @keyframes blob-float-1 {
   0%,
   100% {
