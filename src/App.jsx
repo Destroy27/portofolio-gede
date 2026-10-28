@@ -597,12 +597,14 @@ export default function App() {
                   className="liquid-glass group flex h-full flex-col justify-between rounded-[32px] p-6 transition duration-300 hover:-translate-y-1 sm:p-8"
                 >
                   <div>
-                    <div className="overflow-hidden rounded-2xl">
-                      <img
-                        src={item.gambar}
-                        alt={item.judul}
-                        className="max-h-[280px] w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
+                    <div className="flex justify-center">
+                      <div className="inline-flex overflow-hidden rounded-[26px] border border-white/85 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.14)]">
+                        <img
+                          src={item.gambar}
+                          alt={item.judul}
+                          className="block max-h-[250px] w-auto max-w-full rounded-[26px] transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
                     </div>
 
                     <div className="mt-6 flex items-center gap-2">
