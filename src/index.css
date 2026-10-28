@@ -3,3 +3,63 @@
 html {
   scroll-behavior: smooth;
 }
+
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@keyframes hero-drift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes loader-dot {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.hero-bg {
+  background-color: #13193b;
+  background-image:
+    radial-gradient(45% 55% at 25% 24%, rgba(60, 78, 150, 0.45), transparent 72%),
+    radial-gradient(45% 55% at 78% 20%, rgba(92, 66, 156, 0.4), transparent 72%),
+    radial-gradient(50% 60% at 70% 85%, rgba(40, 60, 128, 0.4), transparent 72%),
+    radial-gradient(45% 55% at 20% 86%, rgba(74, 60, 140, 0.3), transparent 72%);
+  background-size: 165% 165%;
+  animation: hero-drift 26s ease-in-out infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
