@@ -8,72 +8,154 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans",
     system-ui, sans-serif;
-  background-color: #f5f5f7;
-  color: #1d1d1f;
+  background-color: #eef1f6;
+  color: #141417;
   overflow-x: hidden;
 }
 
-.ios-glass {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+/* Efek Liquid Glass khas iOS pada seluruh kartu konten */
+.liquid-glass {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.34) 48%,
+    rgba(255, 255, 255, 0.54) 100%
+  );
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow:
-    0 10px 35px -5px rgba(0, 0, 0, 0.05),
-    0 2px 6px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    0 24px 48px -12px rgba(15, 23, 42, 0.08),
+    0 4px 12px -2px rgba(15, 23, 42, 0.04),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),
+    inset 1.5px 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1.5px 2px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 28px 0 rgba(255, 255, 255, 0.28);
 }
 
-.ios-card {
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow:
-    0 18px 45px -12px rgba(0, 0, 0, 0.06),
-    0 2px 8px rgba(0, 0, 0, 0.02);
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.2) 35%,
+    rgba(255, 255, 255, 0.05) 65%,
+    rgba(255, 255, 255, 0.65) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
-@keyframes name-wave {
+.liquid-glass-sub {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.68) 0%,
+    rgba(255, 255, 255, 0.38) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 8px 24px -6px rgba(15, 23, 42, 0.06),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Animasi latar cairan pastel (ambient mesh) di belakang kaca */
+@keyframes blob-float-1 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(40px, -30px, 0) scale(1.08);
+  }
+}
+
+@keyframes blob-float-2 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-45px, 35px, 0) scale(1.06);
+  }
+}
+
+.ambient-blob-1 {
+  animation: blob-float-1 16s ease-in-out infinite;
+}
+
+.ambient-blob-2 {
+  animation: blob-float-2 20s ease-in-out infinite;
+}
+
+/* Tipografi Nama Lengkap dengan kilau cairan metalik/aurora yang halus */
+@keyframes liquid-text-shine {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gentle-breathe {
   0%,
   100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
   }
 }
 
-@keyframes name-wave-color {
-  0%,
-  100% {
-    transform: translateY(0px);
-    color: #1d1d1f;
-  }
-  50% {
-    transform: translateY(-5px);
-    color: #0071e3;
-  }
+.hero-name-primary {
+  letter-spacing: -0.04em;
+  color: #141417;
+  animation: gentle-breathe 5s ease-in-out infinite;
 }
 
-.idle-char {
+.hero-name-liquid {
   display: inline-block;
-  animation: name-wave 3.4s ease-in-out infinite;
-  will-change: transform;
-}
-
-.idle-char-accent {
-  display: inline-block;
-  animation: name-wave-color 3.8s ease-in-out infinite;
-  will-change: transform, color;
+  padding: 0.12em 0.15em;
+  margin: -0.12em -0.15em;
+  letter-spacing: -0.035em;
+  background-image: linear-gradient(
+    115deg,
+    #141417 0%,
+    #1e293b 22%,
+    #2563eb 42%,
+    #db2777 58%,
+    #0f172a 78%,
+    #141417 100%
+  );
+  background-size: 240% 240%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation:
+    liquid-text-shine 7s ease-in-out infinite,
+    gentle-breathe 5s ease-in-out 0.6s infinite;
 }
 
 .reveal {
   opacity: 0;
   transform: translateY(24px) scale(0.985);
   transition:
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.is-visible {
@@ -82,8 +164,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .idle-char,
-  .idle-char-accent {
+  .ambient-blob-1,
+  .ambient-blob-2,
+  .hero-name-primary,
+  .hero-name-liquid {
     animation: none;
   }
 
