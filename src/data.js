@@ -36,6 +36,38 @@ export const proyek = [
     link: "https://destroy27.github.io/jurnal-7-anak-indonesia-hebat/",
     gambar: `${basis}assets/Jurnal 7 KAIH.png`,
   },
+  {
+    nomor: "03",
+    kategori: "Game Development",
+    judul: "Game Sederhana Sistem Pencernaan",
+    deskripsi:
+      "Game edukasi interaktif untuk mempelajari sistem pencernaan manusia dengan cara yang menyenangkan.",
+    link: "#",
+    gambar: `${basis}assets/game-pencernaan.png`,
+  },
+];
+
+export const galeri = [
+  {
+    judul: "Foto 1",
+    kategori: "Fotografi",
+    gambar: `${basis}assets/galeri/foto-1.jpg`,
+  },
+  {
+    judul: "Foto 2",
+    kategori: "Fotografi",
+    gambar: `${basis}assets/galeri/foto-2.jpg`,
+  },
+  {
+    judul: "Video 1",
+    kategori: "Videografi",
+    gambar: `${basis}assets/galeri/video-1.jpg`,
+  },
+  {
+    judul: "Video 2",
+    kategori: "Videografi",
+    gambar: `${basis}assets/galeri/video-2.jpg`,
+  },
 ];
 
 export const keahlian = [

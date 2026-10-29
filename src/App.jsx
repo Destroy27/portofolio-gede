@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { profil, proyek, keahlian } from "./data.js";
+import { profil, proyek, keahlian, galeri } from "./data.js";
 import LatarDaun3D from "./LatarDaun3D.jsx";
 
 const menu = [
   { label: "Beranda", href: "#top" },
   { label: "Keahlian", href: "#keahlian" },
   { label: "Karya", href: "#work" },
+  { label: "Galeri", href: "#galeri" },
   { label: "Tentang", href: "#about" },
   { label: "Kontak", href: "#kontak" },
 ];
@@ -46,7 +47,42 @@ function NamaHero({ nama }) {
   );
 }
 
-function Reveal({ children, className = "", delay = 0 }) {
+function TypingAnimation({ teks }) {
+  const [tampil, setTampil] = useState("");
+  const [indeks, setIndeks] = useState(0);
+  const [menghapus, setMenghapus] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!menghapus) {
+        if (indeks < teks.length) {
+          setTampil(teks.slice(0, indeks + 1));
+          setIndeks(indeks + 1);
+        } else {
+          setTimeout(() => setMenghapus(true), 1500);
+        }
+      } else {
+        if (indeks > 0) {
+          setTampil(teks.slice(0, indeks - 1));
+          setIndeks(indeks - 1);
+        } else {
+          setMenghapus(false);
+        }
+      }
+    }, menghapus ? 50 : 100);
+
+    return () => clearTimeout(timeout);
+  }, [indeks, menghapus, teks]);
+
+  return (
+    <span className="inline-flex items-center">
+      <span className="text-base font-semibold text-sky-600 sm:text-lg">
+        {tampil}
+      </span>
+      <span className="ml-1 inline-block h-5 w-0.5 animate-pulse bg-sky-500" />
+    </span>
+  );
+}
   const ref = useRef(null);
   const [tampil, setTampil] = useState(false);
 
@@ -495,7 +531,7 @@ export default function App() {
                 <NamaHero nama={profil.nama} />
 
                 <p className="mt-4 text-base font-semibold text-sky-600 sm:text-lg">
-                  {profil.peran}
+                  <TypingAnimation teks="Web Developer & Gamer" />
                 </p>
 
                 <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
@@ -670,6 +706,49 @@ export default function App() {
                 </div>
               </div>
             </Reveal>
+          </div>
+        </section>
+
+        {/* GALERI FOTOGRAFI & VIDEOGRAFI */}
+        <section id="galeri" className="scroll-mt-28">
+          <Reveal>
+            <div className="mb-8 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+              <div>
+                <span className="liquid-glass-sub inline-block rounded-full px-3.5 py-1 text-xs font-semibold text-sky-600">
+                  Hobi & Kreativitas
+                </span>
+                <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-slate-800 sm:text-4xl">
+                  Fotografi & Videografi
+                </h2>
+              </div>
+              <p className="text-sm text-slate-600">
+                Koleksi karya visual saya
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
+            {galeri.map((item, i) => (
+              <Reveal key={item.judul} delay={i * 80}>
+                <div className="liquid-glass group overflow-hidden rounded-[24px] transition duration-300 hover:-translate-y-1">
+                  <div className="overflow-hidden">
+                    <img
+                      src={item.gambar}
+                      alt={item.judul}
+                      className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <span className="liquid-glass-sub rounded-full px-3 py-1 text-xs font-semibold text-sky-600">
+                      {item.kategori}
+                    </span>
+                    <p className="mt-2 text-sm font-bold text-slate-800">
+                      {item.judul}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </section>
 
