@@ -166,7 +166,7 @@ export default function LatarDaun3D() {
     });
 
     // Geometri daun (plane tipis)
-    const geometriDaun = new THREE.PlaneGeometry(0.8, 1.2);
+    const geometriDaun = new THREE.PlaneGeometry(0.5, 0.75);
 
     const jumlahDaun = 45;
     const daftarDaun = [];
@@ -343,7 +343,25 @@ export default function LatarDaun3D() {
             <stop offset="0%" stopColor="#c8dce8" />
             <stop offset="100%" stopColor="#8fb4d8" />
           </linearGradient>
+          <filter id="blurAwan">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" />
+          </filter>
         </defs>
+
+        {/* Lapis Awan di Belakang Gunung (Jauh & Blur) */}
+        <g filter="url(#blurAwan)" opacity="0.6">
+          <ellipse cx="200" cy="280" rx="180" ry="45" fill="#ffffff" />
+          <ellipse cx="350" cy="260" rx="220" ry="55" fill="#f0f9ff" />
+          <ellipse cx="550" cy="290" rx="200" ry="50" fill="#ffffff" />
+          <ellipse cx="800" cy="250" rx="250" ry="60" fill="#f0f9ff" />
+          <ellipse cx="1050" cy="275" rx="190" ry="48" fill="#ffffff" />
+          <ellipse cx="1250" cy="265" rx="230" ry="55" fill="#f0f9ff" />
+          <ellipse cx="100" cy="320" rx="160" ry="40" fill="#e0f2fe" />
+          <ellipse cx="450" cy="310" rx="180" ry="42" fill="#e0f2fe" />
+          <ellipse cx="700" cy="330" rx="200" ry="45" fill="#ffffff" />
+          <ellipse cx="950" cy="315" rx="170" ry="40" fill="#e0f2fe" />
+          <ellipse cx="1200" cy="325" rx="190" ry="44" fill="#ffffff" />
+        </g>
 
         {/* Lapis 1: Pegunungan Salju Jauh */}
         <g ref={gunungJauhRef}>
