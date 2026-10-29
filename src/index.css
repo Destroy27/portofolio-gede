@@ -8,7 +8,7 @@ body {
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans",
     system-ui, sans-serif;
-  background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 45%, #bae6fd 100%);
+  background: linear-gradient(180deg, #f8fafc 0%, #f0fdf4 45%, #ecfdf5 100%);
   background-attachment: fixed;
   color: #1e293b;
   overflow-x: hidden;

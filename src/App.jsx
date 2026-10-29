@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { profil, proyek, keahlian } from "./data.js";
-import LatarBulanSalju3D from "./LatarBulanSalju3D.jsx";
+import LatarDaun3D from "./LatarDaun3D.jsx";
 
 const menu = [
   { label: "Beranda", href: "#top" },
@@ -405,8 +405,8 @@ export default function App() {
         <div className="ambient-blob-1 absolute bottom-[6%] left-[22%] h-[380px] w-[380px] rounded-full bg-indigo-100/40 blur-[110px]" />
       </div>
 
-      {/* Bulan 3D & Hujan Salju 3D yang ikut bergerak saat halaman di-scroll */}
-      <LatarBulanSalju3D />
+      {/* Animasi 3D Daun yang bergerak saat halaman di-scroll */}
+      <LatarDaun3D />
 
       {/* Navigasi Mengambang Liquid Glass ala iOS */}
       <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
