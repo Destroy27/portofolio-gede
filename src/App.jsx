@@ -476,7 +476,7 @@ export default function App() {
             <div className="liquid-glass flex flex-col items-center justify-between gap-8 rounded-[36px] p-8 sm:flex-row sm:p-12">
               {/* Foto Profil Bulat */}
               <div className="flex-shrink-0">
-                <div className="relative h-52 w-52 overflow-hidden rounded-full border-4 border-white/80 shadow-[0_0_40px_rgba(56,189,248,0.25)] sm:h-64 sm:w-64">
+                <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-white/80 shadow-[0_0_40px_rgba(56,189,248,0.25)] sm:h-80 sm:w-80">
                   <img
                     src={profil.foto}
                     alt={profil.nama}
