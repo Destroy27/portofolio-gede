@@ -482,7 +482,7 @@ export default function LatarBulanSalju3D() {
         currentScroll * 1.35 +
         Math.sin(t * 0.6) * 0.14 +
         currentKursor.y * 0.25;
-      const bulanZ = -1.2 + Math.sin(currentScroll * Math.PI) * 1.1;
+      const bulanZ = Math.sin(currentScroll * Math.PI * 2) * 3.5 + Math.cos(currentScroll * Math.PI * 1.2) * 1.5;
       grupBulan.position.set(bulanX, bulanY, bulanZ);
       meshBulan.rotation.y = t * 0.15 + currentScroll * Math.PI * 2.2;
       meshBulan.rotation.x = 0.12 + Math.sin(currentScroll * Math.PI) * 0.25;
@@ -496,7 +496,8 @@ export default function LatarBulanSalju3D() {
         Math.sin(currentScroll * Math.PI * 1.2) * 1.4 +
         Math.cos(t * 0.5) * 0.12 +
         currentKursor.y * 0.2;
-      grupPlanetGas.position.set(gasX, gasY, -3.2);
+      const gasZ = -Math.sin(currentScroll * Math.PI * 2) * 3.5 + Math.cos(currentScroll * Math.PI * 0.8) * 1.2;
+      grupPlanetGas.position.set(gasX, gasY, gasZ);
       meshPlanetGas.rotation.y = -t * 0.22 - currentScroll * Math.PI * 1.8;
       meshCincinPlanet.rotation.z = t * 0.08 + currentScroll * 0.8;
 
@@ -506,7 +507,8 @@ export default function LatarBulanSalju3D() {
         Math.sin(currentScroll * Math.PI * 2) * (mobile ? 1.5 : 3.2) +
         currentKursor.x * 0.18;
       const esY = 3.1 - currentScroll * 0.9 + Math.sin(t * 0.8) * 0.1;
-      grupPlanetEs.position.set(esX, esY, -5.0);
+      const esZ = Math.cos(currentScroll * Math.PI * 1.6) * 2.8 + Math.sin(currentScroll * Math.PI * 0.5) * 1.0;
+      grupPlanetEs.position.set(esX, esY, esZ);
       meshPlanetEs.rotation.y = t * 0.3 + currentScroll * Math.PI;
 
       sistemBintang.rotation.y =

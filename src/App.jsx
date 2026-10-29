@@ -278,8 +278,8 @@ function KartuKeahlian3D({ daftar }) {
           className="pointer-events-none absolute h-[190px] w-[200px] rounded-full border border-dashed border-sky-300/35 sm:h-[250px] sm:w-[390px]"
         />
 
-        {/* Inti Hologram 3D di Tengah Cincin */}
-        <div className="liquid-glass pointer-events-none relative z-30 flex flex-col items-center justify-center rounded-3xl px-5 py-3.5 text-center shadow-lg">
+        {/* Inti Hologram 3D di Tengah Cincin - dinaikkan agar tidak bentrok */}
+        <div className="liquid-glass pointer-events-none absolute top-1 z-30 flex flex-col items-center justify-center rounded-3xl px-5 py-3.5 text-center shadow-lg sm:top-2">
           <div className="mb-1.5 flex items-center gap-2">
             <span
               ref={infoTitikRef}
@@ -478,11 +478,23 @@ export default function App() {
       <main className="relative z-10 mx-auto max-w-6xl space-y-16 px-4 pt-28 pb-20 sm:px-8 sm:pt-32">
         {/* HERO BENTO LIQUID GLASS */}
         <section id="top" className="scroll-mt-28">
-          <div className="grid items-stretch gap-6 lg:grid-cols-[1.35fr_0.9fr]">
-            {/* Kartu Utama Hero */}
-            <div className="liquid-glass flex flex-col justify-between rounded-[36px] p-8 sm:p-12">
-              <div>
-                <div className="liquid-glass-sub mb-6 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-sky-100">
+          <div className="grid items-stretch gap-6 lg:grid-cols-1">
+            {/* Kartu Profil Utama: Foto Bulat + Nama dalam satu kartu */}
+            <div className="liquid-glass flex flex-col items-center justify-between gap-8 rounded-[36px] p-8 sm:flex-row sm:p-12">
+              {/* Foto Profil Bulat */}
+              <div className="flex-shrink-0">
+                <div className="relative h-40 w-40 overflow-hidden rounded-full border-4 border-white/30 shadow-[0_0_40px_rgba(56,189,248,0.3)] sm:h-52 sm:w-52">
+                  <img
+                    src={profil.foto}
+                    alt={profil.nama}
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
+              </div>
+
+              {/* Nama & Info */}
+              <div className="flex-1 text-center sm:text-left">
+                <div className="liquid-glass-sub mb-4 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-sky-200">
                   <span className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]" />
                   <span>{profil.lokasi}</span>
                 </div>
@@ -496,45 +508,21 @@ export default function App() {
                 <p className="mt-4 max-w-xl text-base leading-relaxed text-sky-100/85 sm:text-lg">
                   {profil.ringkas}
                 </p>
-              </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-3">
-                <a
-                  href="#work"
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b132b] shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100"
-                >
-                  <span>Lihat Karya</span>
-                  <span>→</span>
-                </a>
-                <a
-                  href="#keahlian"
-                  className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20"
-                >
-                  Bahasa Pemrograman
-                </a>
-              </div>
-            </div>
-
-            {/* Kartu Widget Foto Profil Penuh dari Atas ke Bawah */}
-            <div className="liquid-glass relative flex min-h-[380px] overflow-hidden rounded-[36px] p-3 sm:min-h-[440px]">
-              <div className="relative h-full w-full flex-1 overflow-hidden rounded-[28px]">
-                <img
-                  src={profil.foto}
-                  alt={profil.nama}
-                  className="absolute inset-0 h-full w-full object-cover object-top"
-                />
-                <div className="liquid-glass absolute right-3 bottom-3 left-3 flex items-center justify-between rounded-2xl px-4 py-3">
-                  <div>
-                    <p className="text-xs font-bold text-white">
-                      {profil.nama}
-                    </p>
-                    <p className="text-[11px] font-medium text-sky-100/85">
-                      {profil.peran}
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-[#0b132b]">
-                    Aktif
-                  </span>
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                  <a
+                    href="#work"
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0b132b] shadow-sm transition hover:-translate-y-0.5 hover:bg-sky-100"
+                  >
+                    <span>Lihat Karya</span>
+                    <span>→</span>
+                  </a>
+                  <a
+                    href="#keahlian"
+                    className="liquid-glass-sub inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20"
+                  >
+                    Bahasa Pemrograman
+                  </a>
                 </div>
               </div>
             </div>
