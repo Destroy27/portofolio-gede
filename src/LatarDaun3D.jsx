@@ -155,7 +155,7 @@ export default function LatarDaun3D() {
     // Tekstur daun
     const teksturDaun = buatTeksturDaun();
 
-    // Material daun (double side, transparan)
+    // Material daun (double side, transparan) - sedikit blur motion via opacity
     const materialDaun = new THREE.MeshStandardMaterial({
       map: teksturDaun,
       transparent: true,
@@ -163,10 +163,11 @@ export default function LatarDaun3D() {
       alphaTest: 0.5,
       roughness: 0.6,
       metalness: 0.1,
+      opacity: 0.8,
     });
 
-    // Geometri daun (plane tipis)
-    const geometriDaun = new THREE.PlaneGeometry(0.5, 0.75);
+    // Geometri daun (plane tipis) - diperkecil lagi
+    const geometriDaun = new THREE.PlaneGeometry(0.25, 0.38);
 
     const jumlahDaun = 45;
     const daftarDaun = [];
@@ -312,16 +313,17 @@ export default function LatarDaun3D() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[100] overflow-hidden"
     >
-      {/* Kanvas WebGL 3D: Daun yang jatuh */}
-      <div ref={wadahRef} className="absolute inset-0" />
+      {/* Kanvas WebGL 3D: Daun yang jatuh - di depan semua konten */}
+      <div ref={wadahRef} className="absolute inset-0" style={{ filter: "blur(0.5px)" }} />
 
-      {/* Lanskap Pegunungan Salju & Pepohonan Cemara (seperti Pohon Natal) di bagian bawah */}
+      {/* Lanskap Pegunungan Salju & Pepohonan Cemara (seperti Pohon Natal) di bagian bawah - di-blur */}
       <svg
         viewBox="0 0 1440 520"
         preserveAspectRatio="xMidYMax slice"
         className="absolute inset-x-0 bottom-0 h-[48vh] w-full sm:h-[54vh]"
+        style={{ filter: "blur(4px)" }}
       >
         <defs>
           <linearGradient id="gradGunungJauh" x1="0" y1="0" x2="0" y2="1">
