@@ -83,6 +83,8 @@ function TypingAnimation({ teks }) {
     </span>
   );
 }
+
+function Reveal({ children, className = "", delay = 0 }) {
   const ref = useRef(null);
   const [tampil, setTampil] = useState(false);
 
