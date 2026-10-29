@@ -48,8 +48,79 @@ function buatTeksturDaun() {
   return tekstur;
 }
 
+// Komponen Pohon Cemara HD (seperti Pohon Natal) untuk lanskap gunung salju
+function PohonCemaraHD({ x, y, skala = 1, warnaPohon = "#0f3d2e" }) {
+  return (
+    <g transform={`translate(${x}, ${y}) scale(${skala})`}>
+      {/* Batang pohon */}
+      <rect x="-5" y="0" width="10" height="20" fill="#2d1a0e" rx="2" />
+      {/* Tingkatan daun cemara (5 susun meruncing ke atas) */}
+      <polygon points="0,-40 -34,8 34,8" fill={warnaPohon} />
+      <polygon points="0,-65 -28,-12 28,-12" fill={warnaPohon} />
+      <polygon points="0,-88 -22,-32 22,-32" fill={warnaPohon} />
+      <polygon points="0,-108 -16,-52 16,-52" fill={warnaPohon} />
+      <polygon points="0,-125 -10,-72 10,-72" fill={warnaPohon} />
+      {/* Lapisan salju putih-biru di pucuk & ujung dahan cemara */}
+      <polygon
+        points="0,-125 -12,-105 -4,-108 0,-102 5,-107 12,-105"
+        fill="#f0f9ff"
+        opacity="0.95"
+      />
+      <polygon
+        points="-22,-32 -12,-40 -6,-34 6,-34 12,-40 22,-32 14,-28 -14,-28"
+        fill="#e0f2fe"
+        opacity="0.85"
+      />
+      <polygon
+        points="-28,-12 -15,-20 -8,-14 8,-14 15,-20 28,-12 20,-6 -20,-6"
+        fill="#dbeafe"
+        opacity="0.8"
+      />
+      <polygon
+        points="-34,8 -18,0 -9,6 9,6 18,0 34,8 24,12 -24,12"
+        fill="#bfdbfe"
+        opacity="0.72"
+      />
+    </g>
+  );
+}
+
+const pohonLapisBelakang = [
+  { x: 60, y: 380, s: 0.55 },
+  { x: 115, y: 375, s: 0.65 },
+  { x: 180, y: 385, s: 0.5 },
+  { x: 290, y: 382, s: 0.6 },
+  { x: 400, y: 378, s: 0.55 },
+  { x: 520, y: 388, s: 0.62 },
+  { x: 660, y: 380, s: 0.58 },
+  { x: 790, y: 386, s: 0.55 },
+  { x: 930, y: 378, s: 0.68 },
+  { x: 1060, y: 384, s: 0.6 },
+  { x: 1190, y: 376, s: 0.65 },
+  { x: 1320, y: 382, s: 0.58 },
+];
+
+const pohonLapisDepan = [
+  { x: 30, y: 460, s: 0.95 },
+  { x: 85, y: 468, s: 0.8 },
+  { x: 150, y: 458, s: 1.05 },
+  { x: 230, y: 470, s: 0.75 },
+  { x: 340, y: 465, s: 0.9 },
+  { x: 470, y: 472, s: 0.82 },
+  { x: 600, y: 462, s: 1.0 },
+  { x: 730, y: 468, s: 0.78 },
+  { x: 870, y: 460, s: 1.08 },
+  { x: 1000, y: 466, s: 0.85 },
+  { x: 1130, y: 458, s: 0.98 },
+  { x: 1260, y: 464, s: 0.88 },
+  { x: 1370, y: 456, s: 1.05 },
+];
+
 export default function LatarDaun3D() {
   const wadahRef = useRef(null);
+  const gunungJauhRef = useRef(null);
+  const gunungDekatRef = useRef(null);
+  const hutanDepanRef = useRef(null);
 
   useEffect(() => {
     const wadah = wadahRef.current;
@@ -206,6 +277,17 @@ export default function LatarDaun3D() {
         }
       }
 
+      // Paralaks pegunungan salju & hutan cemara
+      if (gunungJauhRef.current) {
+        gunungJauhRef.current.style.transform = `translate3d(${(currentKursor.x * -10).toFixed(1)}px, ${(currentScroll * 22).toFixed(1)}px, 0)`;
+      }
+      if (gunungDekatRef.current) {
+        gunungDekatRef.current.style.transform = `translate3d(${(currentKursor.x * -18).toFixed(1)}px, ${(currentScroll * 12).toFixed(1)}px, 0)`;
+      }
+      if (hutanDepanRef.current) {
+        hutanDepanRef.current.style.transform = `translate3d(${(currentKursor.x * -26).toFixed(1)}px, 0px, 0)`;
+      }
+
       renderer.render(scene, camera);
       frameId = requestAnimationFrame(animasikan);
     };
@@ -232,7 +314,119 @@ export default function LatarDaun3D() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
     >
+      {/* Kanvas WebGL 3D: Daun yang jatuh */}
       <div ref={wadahRef} className="absolute inset-0" />
+
+      {/* Lanskap Pegunungan Salju & Pepohonan Cemara (seperti Pohon Natal) di bagian bawah */}
+      <svg
+        viewBox="0 0 1440 520"
+        preserveAspectRatio="xMidYMax slice"
+        className="absolute inset-x-0 bottom-0 h-[48vh] w-full sm:h-[54vh]"
+      >
+        <defs>
+          <linearGradient id="gradGunungJauh" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#a8c5e8" />
+            <stop offset="55%" stopColor="#6b93c8" />
+            <stop offset="100%" stopColor="#3a5f94" />
+          </linearGradient>
+          <linearGradient id="gradGunungDekat" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7ca8dc" />
+            <stop offset="60%" stopColor="#4a7ab8" />
+            <stop offset="100%" stopColor="#2a4f7a" />
+          </linearGradient>
+          <linearGradient id="gradSaljuPuncak" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.98" />
+            <stop offset="70%" stopColor="#e0f2fe" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#bae6fd" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="gradLembahSalju" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#c8dce8" />
+            <stop offset="100%" stopColor="#8fb4d8" />
+          </linearGradient>
+        </defs>
+
+        {/* Lapis 1: Pegunungan Salju Jauh */}
+        <g ref={gunungJauhRef}>
+          <polygon
+            points="-60,520 140,190 340,370 560,130 790,350 1040,155 1290,340 1500,180 1500,520"
+            fill="url(#gradGunungJauh)"
+          />
+          {/* Tudung Salju di Puncak Gunung Jauh */}
+          <polygon
+            points="140,190 85,270 118,258 140,282 168,255 198,272"
+            fill="url(#gradSaljuPuncak)"
+          />
+          <polygon
+            points="560,130 485,245 528,225 560,260 595,222 640,248"
+            fill="url(#gradSaljuPuncak)"
+          />
+          <polygon
+            points="1040,155 968,262 1012,240 1042,272 1075,238 1118,262"
+            fill="url(#gradSaljuPuncak)"
+          />
+        </g>
+
+        {/* Lapis 2: Pegunungan Salju Tengah & Pepohonan Cemara Belakang */}
+        <g ref={gunungDekatRef}>
+          <polygon
+            points="-40,520 60,310 290,220 490,390 740,205 970,385 1190,235 1480,390 1480,520"
+            fill="url(#gradGunungDekat)"
+          />
+          {/* Tudung Salju Puncak Gunung Tengah */}
+          <polygon
+            points="290,220 225,305 262,288 290,318 320,285 358,308"
+            fill="url(#gradSaljuPuncak)"
+          />
+          <polygon
+            points="740,205 670,300 710,278 742,312 775,276 815,302"
+            fill="url(#gradSaljuPuncak)"
+          />
+          <polygon
+            points="1190,235 1125,318 1162,298 1192,326 1222,296 1260,320"
+            fill="url(#gradSaljuPuncak)"
+          />
+
+          {/* Bukit Salju & Pepohonan Cemara Lapis Belakang */}
+          <path
+            d="M-40,435 Q360,395 720,428 T1480,420 L1480,520 L-40,520 Z"
+            fill="url(#gradLembahSalju)"
+          />
+          {pohonLapisBelakang.map((p, idx) => (
+            <PohonCemaraHD
+              key={`b-${idx}`}
+              x={p.x}
+              y={p.y}
+              skala={p.s}
+              warnaPohon="#1a4a3a"
+            />
+          ))}
+        </g>
+
+        {/* Lapis 3: Hamparan Salju Depan & Hutan Pohon Cemara (Pohon Natal) */}
+        <g ref={hutanDepanRef}>
+          <path
+            d="M-40,468 Q280,438 680,465 T1480,455 L1480,520 L-40,520 Z"
+            fill="#d8e8f0"
+          />
+          {/* Garis salju berkilau di punggung bukit */}
+          <path
+            d="M-40,468 Q280,438 680,465 T1480,455"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="2.5"
+            strokeOpacity="0.6"
+          />
+          {pohonLapisDepan.map((p, idx) => (
+            <PohonCemaraHD
+              key={`f-${idx}`}
+              x={p.x}
+              y={p.y}
+              skala={p.s}
+              warnaPohon="#0f3d2e"
+            />
+          ))}
+        </g>
+      </svg>
     </div>
   );
 }
